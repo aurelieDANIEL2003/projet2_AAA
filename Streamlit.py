@@ -1,8 +1,12 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
+from sklearn.neighbors import NearestNeighbors
+from sklearn.preprocessing import MinMaxScaler
+from utils import films_similaires
 
 chemin_bd = r"./bd_ignore/"
+df_filtered = pd.read_csv(chemin_bd + 'df_filtered.csv')
 
 #création du menu
 with st.sidebar:
@@ -18,7 +22,24 @@ if selection == "Accueil 🙋🏼‍♀️":
     st.write('Made by Aurélie, Anissa and Anaëlle.')
 
 elif selection == "Recommendation 🎬":
-   st.text_input("Cherchez un film:")
+   
+   film = st.text_input("Cherchez un film:")
+   
+   films_similaires(film)
+   
+   if film:
+    # Vérifier si le film existe dans le dataset (insensible à la casse)
+    film_trouve = df_filtered['original_title'].str.lower().eq(film.lower()).any()
+
+    if film_trouve:
+        st.success(f"🎬 Le film '{film}' est présent dans la liste !")
+    else:
+        st.error(f"❌ Le film '{film}' n'a pas été trouvé.")
+   else:
+    st.info("🔎 Entrez un titre de film pour vérifier sa présence dans la liste.")
+
+
+
 
 elif selection == "KPI":
    df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
@@ -31,3 +52,11 @@ elif selection == "KPI":
 # la comparaison entre les acteurs présents au cinéma et dans les séries
 # l’âge moyen des acteurs, 
 # ainsi que les films les mieux notés et les caractéristiques qu’ils partagent 
+
+
+  # import pickle
+# # Charger le modèle
+#    def charger_modele():
+#       with open('mon_modele.pkl', 'rb') as f: #là vous mettez l'emplacement et le nom de votre fichier pkl
+#         model_charge = pickle.load(f)
+#       return model_charge
