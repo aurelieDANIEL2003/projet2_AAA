@@ -8,6 +8,7 @@ from utils import films_similaires
 chemin_bd = r"./bd_ignore/"
 df_filtered = pd.read_csv(chemin_bd + '/resultat/df_filtered.csv')
 
+
 #création du menu
 with st.sidebar:
      st.write(f"AAA")
@@ -33,6 +34,9 @@ elif selection == "Recommendation 🎬":
 
     if film_trouve:
         st.success(f"🎬 Le film '{film}' est présent dans la liste !")
+        film_fonction = films_similaires(film, df_filtered)
+        for film in film_trouve:
+                st.write(f"🎬 {film}")
     else:
         st.error(f"❌ Le film '{film}' n'a pas été trouvé.")
    else:
