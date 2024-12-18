@@ -19,7 +19,7 @@ with st.sidebar:
 # On indique au programme quoi faire en fonction du choix
 if selection == "Accueil 🙋🏼‍♀️":
     st.title('Bienvenue sur notre projet 2 !')
-    st.image("/Users/anaellepinceloup/Pictures/AAA/logo_canape.jpeg", width=500)
+    st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
     st.write('Made by Aurélie, Anissa and Anaëlle.')
 
 elif selection == "Recommendation 🎬":
