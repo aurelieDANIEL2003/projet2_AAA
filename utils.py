@@ -9,7 +9,7 @@ import numpy as np
 
 chemin_bd = r"./bd_ignore/"
 
-df_filtered = pd.read_csv(chemin_bd + 'df_filtered.csv')
+df_filtered= pd.read_csv(chemin_bd + 'df_filtered.csv')
 
 features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']
 
