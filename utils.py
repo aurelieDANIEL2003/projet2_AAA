@@ -29,21 +29,8 @@ k = 11 # Meilleure valeur de K = 6 d'aprés fig
 model = NearestNeighbors(n_neighbors=k, metric='euclidean')
 model.fit(X)
 
-def films_similaires(film_index):
-    distances, indices = model.kneighbors([X[film_index]])
-    print("Films similaires :")
-    for i, index in enumerate(indices[0]):
-        film = df_filtered.iloc[index]
-        print(f"{i + 1}: {film['title']} (distance: {distances[0][i]:.2f})")
-        print(f"   Acteurs: {film['actors']}")
-
-
-
-
-# a voir pour mettre dans streamlit(jonathan)
-
-#réinitialiser les indices de df_filtered
 df_filtered = df_filtered.reset_index(drop=True)
+
 
 def films_similaires(titre_film):
     try:
@@ -65,5 +52,14 @@ def films_similaires(titre_film):
     except Exception as e:
         print(f"Une erreur s'est produite: {str(e)}")
 
+
+
+
+# a voir pour mettre dans streamlit(jonathan)
+
+#réinitialiser les indices de df_filtered
+
+
 #exemple d'utilisation
 # films_similaires("Inception")  
+
