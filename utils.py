@@ -36,3 +36,34 @@ def films_similaires(film_index):
         film = df_filtered.iloc[index]
         print(f"{i + 1}: {film['title']} (distance: {distances[0][i]:.2f})")
         print(f"   Acteurs: {film['actors']}")
+
+
+
+
+# a voir pour mettre dans streamlit(jonathan)
+
+#réinitialiser les indices de df_filtered
+df_filtered = df_filtered.reset_index(drop=True)
+
+def films_similaires(titre_film):
+    try:
+        #trouver l'index du film dans df_filtered
+        film_index = df_filtered[df_filtered['title'] == titre_film].index[0]
+        
+        #obtenir les films similaires
+        distances, indices = model.kneighbors([X[film_index]])
+        
+        print(f"\nFilms similaires à '{titre_film}':\n")
+        for i, index in enumerate(indices[0][1:]):  
+            film = df_filtered.iloc[index]
+            print(f"{i + 1}: {film['title']} (distance: {distances[0][i+1]:.2f})")
+            print(f"   Acteurs: {film['actors']}")
+            print(f"   Genres: {film['genres']}\n")
+            
+    except IndexError:
+        print(f"Erreur: Le film '{titre_film}' n'a pas été trouvé dans la base de données.")
+    except Exception as e:
+        print(f"Une erreur s'est produite: {str(e)}")
+
+#exemple d'utilisation
+# films_similaires("Inception")  
