@@ -8,7 +8,6 @@ from utils import films_similaires
 chemin_bd = r"./bd_ignore/"
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 
-
 #création du menu
 with st.sidebar:
      st.write(f"AAA")
