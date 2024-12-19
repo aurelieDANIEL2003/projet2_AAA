@@ -54,17 +54,17 @@ elif selection == "Recommendation 🎬":
 
 # KPI
 elif selection == "KPI":
-    st.title("KPI")
-    try:
-        df_final_KPI = pd.read_csv(chemin_bd + "resultat/df_final.csv")
-        st.bar_chart(data=df_final_KPI, x='', y='count')
-    except FileNotFoundError:
-        st.error("Le fichier 'df_final.csv' est introuvable.")
-
+   df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
+   df_top_5_actors_per_periods = pd.read_csv(chemin_bd + 'resultat/df_top_5_actors_per_periodsa.csv')
+   df_top5_acteurs_nv = pd.read_csv(chemin_bd + '/resultat/df_top5_acteurs_nv.csv')
+#    st.bar_chart(data = df_top5_acteurs_nv, x='primaryName', y='count', color = 'periode', stack="layered", horizontal=True)
+   plot = sns.barplot(data = df_top5_acteurs_nv, x='primaryName', y='count')
+   # Affichez le graphique dans Streamlit
+   st.pyplot(plot.get_figure())
 
 # idées de graph pour chaque kpi
 # l’identification des acteurs les plus présents et les périodes associées --> histogram/barplot avec 5 barres(= 5 acteurs) par période et count de leur apparition en axe y
-# l’évolution de la durée moyenne des films au fil des années --> lineplot ou peut être un bar plot car nos périodes sont définies en catégories
+# l’évolution de la durée moyenne des films au fil des années --> lineplot ou peut être un bar plot car nos périodes sont définies en catégories (Anissa)
 # la comparaison entre les acteurs présents au cinéma et dans les séries
 # l’âge moyen des acteurs, 
 # ainsi que les films les mieux notés et les caractéristiques qu’ils partagent 
@@ -76,3 +76,6 @@ elif selection == "KPI":
 #       with open('mon_modele.pkl', 'rb') as f: #là vous mettez l'emplacement et le nom de votre fichier pkl
 #         model_charge = pickle.load(f)
 #       return model_charge
+
+
+
