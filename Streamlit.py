@@ -21,6 +21,7 @@ if selection == "Accueil 🙋🏼‍♀️":
     st.title('Bienvenue au CINEMA !')
     st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
     st.write('Made by Aurélie, Anissa et Anaëlle.')
+    
 
 # Recommendation
 elif selection == "Recommendation 🎬":
@@ -32,13 +33,13 @@ elif selection == "Recommendation 🎬":
         film_trouve = df_filtered['title'].str.lower().eq(film.lower()).any()
 
         if film_trouve:
-            st.success(f"🎬 Le film '{film}' est présent dans la liste !")
+            st.success(f"🎬 Je cherche des films similaires à {film}!")
             resultats = films_similaires(film, df_filtered)
 
             if resultats:
-                st.write(f"🎬 Voici des films similaires à **{film}** :")
+                st.write(f"🎬 Voici mes propositions:")
                 for res in resultats:
-                    st.write(f"- **{res['title']}** (distance: {res['distance']:.2f})")
+                    st.write(f"- **{res['title']}** ")#(distance: {res['distance']:.2f})")
                    
                     # Ajouter un lien IMDb si l'identifiant IMDb existe et un poster
                     if res.get('imdb_id'):

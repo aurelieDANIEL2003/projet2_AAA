@@ -40,7 +40,7 @@ def films_similaires(film_nom, df):
         resultats = []
         for i, idx in enumerate(indices[0][1:], start=1):  # Exclure le film d'origine
             film_title = df_filtered.iloc[idx]['title']
-            distance = distances[0][i]
+            #distance = distances[0][i]
             
             # Récupérer le lien depuis df_tmdb
             lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
@@ -48,7 +48,7 @@ def films_similaires(film_nom, df):
 
             resultats.append({
                 "title": film_title,
-                "distance": distance,
+                #"distance": distance,
                 "poster_path": lien_poster[0] if len(lien_poster) > 0 else None, 
                 "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
             })
