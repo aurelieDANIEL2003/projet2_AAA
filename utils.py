@@ -145,30 +145,7 @@ if selection == "Accueil 🙋🏼‍♀️":
     st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
     st.write('Made by Aurélie, Anissa et Anaëlle.')
 
-# # Recommendation
-# elif selection == "Recommendation 🎬":
-#     st.title("Recommandation de films 🎬")
-#     film = st.text_input("Cherchez un film :")
-    
-#     if film:
-#         # Vérifier si le film existe dans la base
-#         film_trouve = df_filtered['original_title'].str.lower().eq(film.lower()).any()
-
-#         if film_trouve:
-#             st.success(f"🎬 Le film '{film}' est présent dans la liste !")
-#             resultats = films_similaires(film, df_filtered)
-
-#             if resultats:
-#                 st.write(f"🎬 Voici des films similaires à **{film}** :")
-#                 for res in resultats:
-#                     st.write(f"- **{res['title']}** (distance: {res['distance']:.2f})")
-#             else:
-#                 st.error(f"❌ Impossible de trouver des films similaires pour '{film}'.")
-#         else:
-#             st.error(f"❌ Le film '{film}' n'a pas été trouvé.")
-#     else:
-#         st.info("🔎 Entrez un titre de film pour rechercher des recommandations.")
-
+# Recommendation
 elif selection == "Recommendation 🎬":
     st.title("Recommandation de films 🎬")
     film = st.text_input("Cherchez un film :")
@@ -179,17 +156,20 @@ elif selection == "Recommendation 🎬":
 
         if film_trouve:
             st.success(f"🎬 Le film '{film}' est présent dans la liste !")
-            resultats = films_similaires(film, df_filtered, df_tmdb)
+            resultats = films_similaires(film, df_filtered)
 
             if resultats:
                 st.write(f"🎬 Voici des films similaires à **{film}** :")
                 for res in resultats:
-                    # Afficher les informations avec le lien vers la homepage ou IMDb
                     st.write(f"- **{res['title']}** (distance: {res['distance']:.2f})")
-                    if res['homepage']:
-                        st.write(f"  [Lien vers la page officielle]({res['homepage']})")
-                    if res['imdb_id']:
-                        st.write(f"  [Lien IMDb](https://www.imdb.com/title/{res['imdb_id']}/)")
+                   
+                    # Ajouter un lien vers la page officielle si elle existe
+                    if res.get('homepage'):
+                      st.write(f"  [Page officielle]({res['homepage']})")
+    
+                    # Ajouter un lien IMDb si l'identifiant IMDb existe
+                      if res.get('imdb_id'):
+                       st.write(f"  [Lien IMDb](https://www.imdb.com/title/{res['imdb_id']}/)")
             else:
                 st.error(f"❌ Impossible de trouver des films similaires pour '{film}'.")
         else:
