@@ -40,11 +40,13 @@ elif selection == "Recommendation 🎬":
                 for res in resultats:
                     st.write(f"- **{res['title']}** (distance: {res['distance']:.2f})")
                    
-                    # Ajouter un lien IMDb si l'identifiant IMDb existe
+                    # Ajouter un lien IMDb si l'identifiant IMDb existe et un poster
                     if res.get('imdb_id'):
                        st.write(f"  [Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
                     if res.get('poster_path'):
-                       st.image(lien_poster)
+                       # lien de l'image dans tmdb https://image.tmdb.org/t/p/w500
+                       # .get nous permet d'avoir acces a un element specifique ici poster_path
+                       st.image(f"https://image.tmdb.org/t/p/w500{res['poster_path']}", width=200) 
             else:
                 st.error(f"❌ Le film '{film}' n'a pas été trouvé.")
     else:

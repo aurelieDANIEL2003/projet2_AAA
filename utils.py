@@ -49,7 +49,7 @@ def films_similaires(film_nom, df):
             resultats.append({
                 "title": film_title,
                 "distance": distance,
-                "poster": lien_poster[0] if len(lien_poster) > 0 else None,
+                "poster_path": lien_poster[0] if len(lien_poster) > 0 else None, 
                 "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
             })
 
