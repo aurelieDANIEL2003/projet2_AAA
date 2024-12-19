@@ -69,6 +69,10 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler
 
+chemin_bd = r"./bd_ignore/"
+
+df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
+
 # Fonction films_similaires
 def films_similaires(film_nom, df):
     try:
@@ -94,11 +98,30 @@ def films_similaires(film_nom, df):
         # Trouver les films similaires
         distances, indices = model.kneighbors([X[film_index[0]]])
 
-        # Retourner les résultats
-        resultats = [
-            {"title": df.iloc[idx]['original_title'], "distance": distances[0][i]}
-            for i, idx in enumerate(indices[0][1:], start=1)  # Exclure le film d'origine
-        ]
+        # # Retourner les résultats
+        # resultats = [
+        #     {"title": df.iloc[idx]['original_title'], "distance": distances[0][i]}
+        #     for i, idx in enumerate(indices[0][1:], start=1)  # Exclure le film d'origine
+        # ]
+        # return resultats
+
+        # Retourner les résultats avec lien
+        resultats = []
+        for i, idx in enumerate(indices[0][1:], start=1):  # Exclure le film d'origine
+            film_title = df_filtered.iloc[idx]['original_title']
+            distance = distances[0][i]
+            
+            # Récupérer le lien depuis df_tmdb
+            lien_film = df_tmdb[df_tmdb['original_title'] == film_title]['homepage'].values
+            imdb_id = df_tmdb[df_tmdb['original_title'] == film_title]['imdb_id'].values
+
+            resultats.append({
+                "title": film_title,
+                "distance": distance,
+                "homepage": lien_film[0] if len(lien_film) > 0 else None,
+                "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
+            })
+
         return resultats
 
     except Exception as e:
