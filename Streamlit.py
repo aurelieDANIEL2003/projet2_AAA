@@ -6,8 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 from utils import films_similaires
 
 chemin_bd = r"./bd_ignore/"
-df_filtered = pd.read_csv(chemin_bd + '/resultat/df_filtered.csv')
-
+df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 
 #création du menu
 with st.sidebar:
@@ -19,7 +18,7 @@ with st.sidebar:
 # On indique au programme quoi faire en fonction du choix
 if selection == "Accueil 🙋🏼‍♀️":
     st.title('Bienvenue sur notre projet 2 !')
-    st.image("/Users/anaellepinceloup/Pictures/AAA/logo_canape.jpeg", width=500)
+    st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
     st.write('Made by Aurélie, Anissa and Anaëlle.')
 
 elif selection == "Recommendation 🎬":
