@@ -141,7 +141,7 @@ with st.sidebar:
 
 # Accueil
 if selection == "Accueil 🙋🏼‍♀️":
-    st.title('Bienvenue sur notre projet 2 !')
+    st.title('Bienvenue au CINEMA !')
     st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
     st.write('Made by Aurélie, Anissa et Anaëlle.')
 
@@ -163,15 +163,11 @@ elif selection == "Recommendation 🎬":
                 for res in resultats:
                     st.write(f"- **{res['title']}** (distance: {res['distance']:.2f})")
                    
-                    # Ajouter un lien vers la page officielle si elle existe
-                    if res.get('homepage'):
-                      st.write(f"  [Page officielle]({res['homepage']})")
-    
                     # Ajouter un lien IMDb si l'identifiant IMDb existe
-                      if res.get('imdb_id'):
-                       st.write(f"  [Lien IMDb](https://www.imdb.com/title/{res['imdb_id']}/)")
-            else:
-                st.error(f"❌ Impossible de trouver des films similaires pour '{film}'.")
+                    if res.get('imdb_id'):
+                       st.write(f"  [Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
+            # else:
+            #     st.error(f"❌ Impossible de trouver des films similaires pour '{film}'.")
         else:
             st.error(f"❌ Le film '{film}' n'a pas été trouvé.")
     else:
