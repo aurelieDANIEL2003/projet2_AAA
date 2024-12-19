@@ -24,11 +24,11 @@ def films_similaires(film_nom, df):
         X = scaler.fit_transform(df_encoded)
 
         # Initialiser le modèle Nearest Neighbors
-        model = NearestNeighbors(n_neighbors=11, metric='euclidean')
+        model = NearestNeighbors(n_neighbors=6, metric='euclidean')
         model.fit(X)
 
         # Rechercher l'index du film donné
-        film_index = df[df['original_title'].str.lower() == film_nom.lower()].index
+        film_index = df[df['title'].str.lower() == film_nom.lower()].index
 
         if len(film_index) == 0:
             return None
@@ -39,17 +39,17 @@ def films_similaires(film_nom, df):
         # Retourner les résultats avec lien
         resultats = []
         for i, idx in enumerate(indices[0][1:], start=1):  # Exclure le film d'origine
-            film_title = df_filtered.iloc[idx]['original_title']
+            film_title = df_filtered.iloc[idx]['title']
             distance = distances[0][i]
             
             # Récupérer le lien depuis df_tmdb
-            #lien_film = df_tmdb[df_tmdb['original_title'] == film_title]['homepage'].values
-            imdb_id = df_tmdb[df_tmdb['original_title'] == film_title]['imdb_id'].values
+            lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
+            imdb_id = df_tmdb[df_tmdb['title'] == film_title]['imdb_id'].values
 
             resultats.append({
                 "title": film_title,
                 "distance": distance,
-                #"homepage": lien_film[0] if len(lien_film) > 0 else None,
+                "poster": lien_poster[0] if len(lien_poster) > 0 else None,
                 "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
             })
 

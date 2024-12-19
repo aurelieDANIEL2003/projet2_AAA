@@ -29,7 +29,7 @@ elif selection == "Recommendation 🎬":
     
     if film:
         # Vérifier si le film existe dans la base
-        film_trouve = df_filtered['original_title'].str.lower().eq(film.lower()).any()
+        film_trouve = df_filtered['title'].str.lower().eq(film.lower()).any()
 
         if film_trouve:
             st.success(f"🎬 Le film '{film}' est présent dans la liste !")
@@ -43,6 +43,8 @@ elif selection == "Recommendation 🎬":
                     # Ajouter un lien IMDb si l'identifiant IMDb existe
                     if res.get('imdb_id'):
                        st.write(f"  [Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
+                    if res.get('poster_path'):
+                       st.image(lien_poster)
             else:
                 st.error(f"❌ Le film '{film}' n'a pas été trouvé.")
     else:
@@ -58,7 +60,7 @@ elif selection == "KPI":
     except FileNotFoundError:
         st.error("Le fichier 'df_final.csv' est introuvable.")
 
-        
+
 # idées de graph pour chaque kpi
 # l’identification des acteurs les plus présents et les périodes associées --> histogram/barplot avec 5 barres(= 5 acteurs) par période et count de leur apparition en axe y
 # l’évolution de la durée moyenne des films au fil des années --> lineplot ou peut être un bar plot car nos périodes sont définies en catégories
