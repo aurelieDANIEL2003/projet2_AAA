@@ -144,22 +144,61 @@ elif selection == "KPI":
         df_resulta_expanded['Rang'] = df_resulta_expanded.groupby('période').cumcount() + 1
 
         # Graph: Top 3 films par période avec dégradé de couleurs
-        plot_top3_films = px.bar(
-            data_frame=df_resulta_expanded,
-            x='Films',
-            y='période',
-            color='Rang',  # Dégradé de couleurs basé sur le rang
-            orientation='h',  # Barres horizontales
-            title='Top 3 des films par période',
-            hover_name='Films',  # Affichage des films au survol
-            labels={"Films": "Films", "période": "Période", "Rang": "Rang (Top 1 à 3)"},
-          color_continuous_scale=px.colors.sequential.Blues 
-          #color_continuous_scale=px.colors.make_colorscale(px.colors.sequential.Blues, scale=[0.1, 1])
+        # plot_top3_films = px.bar(
+        #     data_frame=df_resulta_expanded,
+        #     x='Films',
+        #     y='période',
+        #     color='Rang',  # Dégradé de couleurs basé sur le rang
+        #     orientation='h',  # Barres horizontales
+        #     title='Top 3 des films par période',
+        #     hover_name='Films',  # Affichage des films au survol
+        #     labels={"Films": "Films", "période": "Période", "Rang": "Rang (Top 1 à 3)"},
+        #   color_continuous_scale=px.colors.sequential.Blues 
+        #   #color_continuous_scale=px.colors.make_colorscale(px.colors.sequential.Blues, scale=[0.1, 1])
  
 
-        )
-        st.plotly_chart(plot_top3_films)
+        # )
+        df_final_KPI = df_final_KPI.assign(Top_3_films=df_final_KPI['Top 3 films'].str.split(','))
+        df_final_KPI = df_final_KPI.explode('Top 3 films')  # Une ligne par titre associé
+        df_final_KPI = df_final_KPI['Top_3_films'].explode()
+        plot_top3_films = px.bar(
+        df_final_KPI,
+        x='période',
+        y="Top_3_films",
+        animation_frame='Top_3_films',
+        color="Top_3_films",
+        title="Top_3_films",
 
+            )
+            #fig8.update_xaxes(range=[0, 31])
+            #fig8.update_yaxes(range=[0, 40])
+            #fig8.show()
+        st.plotly_chart(plot_top3_films)
+        # st.plotly_chart(plot_top3_films)
+    # # Exploser les titres associés (knownForTitles)
+    #     df_final_KPI = df_final_KPI.assign(Top_3_films=df_final_KPI['Top 3 films'].str.split(','))
+    #     df_final_KPI = df_final_KPI.explode('Top 3 films')  # Une ligne par titre associé
+    #     plot_top3_films = px.bar(
+    #         data_frame = df_final_KPI,
+    #         x="période",              # Classement des films (1er, 2e, 3e)
+    #         y="Top 3 films",             # Score des films
+    #         color="Top 3 films",         # Couleur pour chaque film
+    #         animation_frame="période",  # Animation basée sur les décennies
+    #         hover_name="Top 3 films",    # Affichage du titre au survol
+    #         title="Podium des 3 meilleurs films par période",
+    #         labels={"rank": "Classement", "score": "Score"},
+    #         text="Top 3 films"           # Afficher le titre sur les barres
+    #     )
+
+    #     #Ajuster l'apparence
+    #     plot_top3_films.update_layout(
+    #         xaxis=dict(title="Classement (1er, 2e, 3e)", tickvals=[1, 2, 3]),
+    #         yaxis=dict(title="Score"),
+    #         showlegend=False
+    #     )
+
+    #     st.plotly_chart(plot_top3_films)
+        
 
         # Graph : Camembert pour l'âge moyen des acteurs par période
         st.title("Âge moyen des acteurs par période")
