@@ -5,6 +5,9 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler
 from utils import films_similaires
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
 
 chemin_bd = r"./bd_ignore/"
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
@@ -54,17 +57,36 @@ elif selection == "Recommendation 🎬":
 
 # KPI
 elif selection == "KPI":
-   df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
-   df_top_5_actors_per_periods = pd.read_csv(chemin_bd + 'resultat/df_top_5_actors_per_periodsa.csv')
-   df_top5_acteurs_nv = pd.read_csv(chemin_bd + '/resultat/df_top5_acteurs_nv.csv')
-#    st.bar_chart(data = df_top5_acteurs_nv, x='primaryName', y='count', color = 'periode', stack="layered", horizontal=True)
-   plot = sns.barplot(data = df_top5_acteurs_nv, x='primaryName', y='count')
-   # Affichez le graphique dans Streamlit
-   st.pyplot(plot.get_figure())
+    st.title("KPI")
+    try:
+      df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
+      df_top_5_actors_per_periods = pd.read_csv(chemin_bd + 'resultat/df_top_5_actors_per_periodsa.csv')
+      # df_top5_acteurs_nv = pd.read_csv(chemin_bd + '/resultat/df_top5_acteurs_nv.csv')
+      
+      #st.bar_chart(data = df_top5_acteurs_nv, x='primaryName', y='count', color = 'periode', stack="layered", horizontal=True)
+      
+      #plot = sns.barplot(data = df_top5_acteurs_nv, x='primaryName', y='count')
+      #Affichez le graphique dans Streamlit
+      #st.pyplot(plot.get_figure()) #pour seaborn
+      
+      plot1 = px.bar(data_frame = df_top_5_actors_per_periods, x='count', y='primaryName', color='periode', orientation = 'h', title='Top 5 des acteurs', barmode = 'overlay', hover_name='periode')
+      st.plotly_chart(plot1)
+      
+      plot2 = go.Figure()
+      plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_films']))
+      plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_films']))
+      plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_series']))
+      plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_series']))
+      plot2.update_layout(title=dict(text="Nombre d'acteurs dans les films et séries"))
+      st.plotly_chart(plot2)
+
+    except FileNotFoundError:
+        st.error("Le fichier 'df_final.csv' est introuvable.")
+
 
 # idées de graph pour chaque kpi
 # l’identification des acteurs les plus présents et les périodes associées --> histogram/barplot avec 5 barres(= 5 acteurs) par période et count de leur apparition en axe y
-# l’évolution de la durée moyenne des films au fil des années --> lineplot ou peut être un bar plot car nos périodes sont définies en catégories (Anissa)
+# l’évolution de la durée moyenne des films au fil des années --> lineplot ou peut être un bar plot car nos périodes sont définies en catégories
 # la comparaison entre les acteurs présents au cinéma et dans les séries
 # l’âge moyen des acteurs, 
 # ainsi que les films les mieux notés et les caractéristiques qu’ils partagent 
@@ -76,7 +98,3 @@ elif selection == "KPI":
 #       with open('mon_modele.pkl', 'rb') as f: #là vous mettez l'emplacement et le nom de votre fichier pkl
 #         model_charge = pickle.load(f)
 #       return model_charge
-
-
-
-#streamlit

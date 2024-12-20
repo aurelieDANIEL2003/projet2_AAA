@@ -59,5 +59,3 @@ def films_similaires(film_nom, df):
     except Exception as e:
         st.error(f"Erreur lors du traitement : {e}")
         return None
-
-
