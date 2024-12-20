@@ -4,11 +4,11 @@ import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler
 from utils3 import films_similaires, films_similaires2, films_similaires3
+import re
 
 # Charger les données
 chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
-df_tmdbF = pd.read_csv(chemin_bd + 'resultat/df_tmdb3.csv')
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 
 # Fonction pour réinitialiser la recherche
@@ -87,7 +87,7 @@ elif selection == "Recommandation 🎬":
             # Recommandation par genre
             if genre_button:
                 st.write("🔍 Recherche de recommandations par genre...")
-                resultats = films_similaires2(film, df_filtered)
+                resultats = films_similaires2(film, df_filtered, df_tmdb)
                 if resultats:
                     st.write("🎬 Voici mes propositions par genre :")
                     for res in resultats:
