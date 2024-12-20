@@ -1,10 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
-from sklearn.neighbors import NearestNeighbors
-from sklearn.preprocessing import MinMaxScaler
 from utils3 import films_similaires, films_similaires2, films_similaires3
-import re
 
 # Charger les données
 chemin_bd = r"./bd_ignore/"
@@ -16,20 +13,20 @@ def reset_search():
     st.session_state['film'] = ""
     st.experimental_rerun()
 
-# Initialisation du menu latéral
+# Menu latéral
 with st.sidebar:
     selection = option_menu(
         menu_title=None,
         options=["Accueil 🙋🏼‍♀️", "Recommandation 🎬", "KPI"]
     )
 
-# Accueil
+# Page d'accueil
 if selection == "Accueil 🙋🏼‍♀️":
-    st.title('Bienvenue au CINEMA !')
+    st.title('Bienvenue au CINÉMA !')
     st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
     st.write('Made by Aurélie, Anissa et Anaëlle.')
 
-# Recommandation
+# Page de recommandation
 elif selection == "Recommandation 🎬":
     st.title("Recommandation de films 🎬")
     
@@ -44,8 +41,8 @@ elif selection == "Recommandation 🎬":
         film_trouve = df_filtered['title'].str.lower().eq(film.lower()).any()
 
         if film_trouve:
-            st.success(f"⏳ Je cherche des films similaires à {film}!")
-            col1, col2, col3, col4, col5 = st.columns(5)
+            st.success(f"⏳ Je cherche des films similaires à **{film}**!")
+            col1, col2, col3 = st.columns(3)
             
             with col1:
                 vote_button = st.button("👍 Par vote")
@@ -53,74 +50,54 @@ elif selection == "Recommandation 🎬":
                 genre_button = st.button("🍿 Par genre")
             with col3:
                 actor_button = st.button("⭐ Par acteur")
-            with col4:
-                # Bouton pour réinitialiser la recherche
-                reset_button = st.button("🔄 Nouvelle recherche")
-                if reset_button:
-                    reset_search()
-            with col5:
-                # Bouton pour arreter la recherche
-                stop_button = st.button("🛑 Arrêter la recherche")
-                       # Si le bouton "Arrêter" est pressé  
-                if stop_button:
-                    st.session_state['stop'] = True
-                    st.warning("Recherche interrompue par l'utilisateur.")
-                    st.stop()
             
-            
-
             # Recommandation par vote
             if vote_button:
                 st.write("🔍 Recherche de recommandations par vote...")
                 resultats = films_similaires(film, df_filtered)
                 if resultats:
-                    st.write("🎬 Voici mes propositions par vote :")
                     for res in resultats:
-                        st.write(f"- **{res['title']}**")
+                        st.write(f"- **{res.get('title', 'Titre inconnu')}**")
                         if res.get('imdb_id'):
-                            st.write(f"  [Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
+                            st.write(f"[Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
                         if res.get('poster_path'):
                             st.image(f"https://image.tmdb.org/t/p/w500{res['poster_path']}", width=200)
                 else:
                     st.error("❌ Aucune recommandation trouvée par vote.")
 
             # Recommandation par genre
-
             if genre_button:
                 st.write("🔍 Recherche de recommandations par genre...")
                 resultats = films_similaires2(film, df_filtered, df_tmdb)
-                if resultats:
-                    st.write("🎬 Voici mes propositions par genre :")
+                if isinstance(resultats, list):
                     for res in resultats:
-                        st.write(f"- **{res['title']}**")
+                        st.write(f"- **{res.get('title', 'Titre inconnu')}**")
                         if res.get('imdb_id'):
-                            st.write(f"  [Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
+                            st.write(f"[Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
                         if res.get('poster_path'):
                             st.image(f"https://image.tmdb.org/t/p/w500{res['poster_path']}", width=200)
                 else:
-                    st.error("❌ Aucune recommandation trouvée par genre.")   
+                    st.error(resultats)  # Affiche le message d'erreur retourné par films_similaires2
 
-
+            # Recommandation par acteur
             if actor_button:
                 st.write("🔍 Recherche de recommandations par acteur...")
                 resultats = films_similaires3(film, df_filtered, df_tmdb)
-                if resultats:
-                    st.write("🎬 Voici mes propositions par acteur :")
+                if isinstance(resultats, list):
                     for res in resultats:
-                        st.write(f"- **{res['title']}**")
+                        st.write(f"- **{res.get('title', 'Titre inconnu')}**")
                         if res.get('imdb_id'):
-                            st.write(f"  [Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
+                            st.write(f"[Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
                         if res.get('poster_path'):
                             st.image(f"https://image.tmdb.org/t/p/w500{res['poster_path']}", width=200)
                 else:
-                    st.error("❌ Aucune recommandation trouvée par acteur.")
-
+                    st.error(resultats)  # Affiche le message d'erreur retourné par films_similaires3
         else:
-            st.error(f"❌ Le film '{film}' n'a pas été trouvé.")
+            st.error(f"❌ Le film **'{film}'** n'a pas été trouvé dans la base.")
     else:
         st.info("🔎 Entrez un titre de film pour rechercher des recommandations.")
 
-# KPI
+# Page KPI
 elif selection == "KPI":
     st.title("KPI")
     try:
