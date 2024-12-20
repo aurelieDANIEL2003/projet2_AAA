@@ -8,6 +8,7 @@ import pandas as pd
 
 chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
+df_tmdbF = pd.read_csv(chemin_bd + 'resultat/df_tmdb3.csv')
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 # df_filtered = df_filtered.reset_index(drop=True)
 
@@ -59,55 +60,64 @@ def films_similaires(film_nom, df):
         st.error(f"Erreur lors du traitement : {e}")
         return None
     
-def films_similaires2(film_nom, df):
+
+
+def films_similaires2(df_tmdbF, nom_film, k=6):
     try:
-        # Préparer les caractéristiques pour le modèle Nearest Neighbors
+        # Vérifier si le film existe
+        if nom_film not in df_tmdbF['title'].values:
+            return f"Le film '{nom_film}' n'existe pas dans la base de données."
+        
+        # Obtenir les genres du film cible
+        genre2 = df_tmdbF.loc[df_tmdbF['title'] == nom_film, 'genres'].iloc[0]
+        
+        # Filtrer les films ayant le même genre
+        genreF = df_tmdbF[df_tmdbF['genres'].str.contains(genre2, na=False)].copy()
+        
+        # Si moins de `k` films dans le genre, retourner les films disponibles
+        if genreF.shape[0] < k:
+            return genreF[['title', 'genres', 'popularity', 'vote_average']].reset_index(drop=True)
+        
+        # Sélectionner les caractéristiques pour KNN
         features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']
-        df_encoded = pd.concat(
-            [df[features], pd.get_dummies(df['genres'].apply(lambda x: ','.join(x)), prefix='genre')],
-            axis=1
-        )
+        knn_data = genreF[features].fillna(0)  # Remplacer les valeurs manquantes par 0
+        
+        # Normaliser les données
         scaler = MinMaxScaler()
-        X = scaler.fit_transform(df_encoded)
-
-            # Initialiser le modèle Nearest Neighbors
-        model = NearestNeighbors(n_neighbors=6, metric='euclidean')  # Augmenter le nombre de voisins
-        model.fit(X)
-
-        # Rechercher l'index du film donné
-        film_index = df[df['title'].str.lower() == film_nom.lower()].index
-
-        if len(film_index) == 0:
-            return None
-
-        # Trouver les films similaires
-        distances, indices = model.kneighbors([X[film_index[0]]])
-
-        # Récupérer les genres du film d'origine
-        film_genres = df.iloc[film_index[0]]['genres']
-
-        # Filtrer les voisins par genre
+        knn_data_scaled = scaler.fit_transform(knn_data)
+        
+        # Appliquer KNN
+        knn = NearestNeighbors(n_neighbors=k, metric='euclidean')
+        knn.fit(knn_data_scaled)
+        
+        # Obtenir l'index du film cible dans le DataFrame
+        target_index = genreF[genreF['title'] == nom_film].index[0]
+        target_features = knn_data_scaled[genreF.index.get_loc(target_index)].reshape(1, -1)
+        
+        # Trouver les voisins les plus proches
+        distances, indices = knn.kneighbors(target_features)
+        
+        # Préparer les résultats
         resultats = []
         for i, idx in enumerate(indices[0][1:], start=1):  # Exclure le film d'origine
-            film_title = df_filtered.iloc[idx]['title']
-            neighbor_genres = df_filtered.iloc[idx]['genres']
+            film_title = genreF.iloc[idx]['title']
+            
+            # Récupérer le lien depuis df_tmdbF
+            lien_poster = df_tmdbF[df_tmdbF['title'] == film_title]['poster_path'].values
+            imdb_id = df_tmdbF[df_tmdbF['title'] == film_title]['imdb_id'].values
 
-            # Vérifier si au moins un genre est commun
-            if any(genre in neighbor_genres for genre in film_genres):
-                lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
-                imdb_id = df_tmdb[df_tmdb['title'] == film_title]['imdb_id'].values
-
-                resultats.append({
-                    "title": film_title,
-                    "poster_path": lien_poster[0] if len(lien_poster) > 0 else None, 
-                    "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
-                })
-
+            resultats.append({
+                "title": film_title,
+                "poster_path": lien_poster[0] if len(lien_poster) > 0 else None, 
+                "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
+            })
+        
         return resultats
-
+    
     except Exception as e:
-        st.error(f"Erreur lors du traitement : {e}")
-        return None
+        return f"Erreur lors du traitement : {e}"
+
+
   
 
 def films_similaires3(film_nom, df, df_tmdb):

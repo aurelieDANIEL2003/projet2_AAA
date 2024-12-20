@@ -8,6 +8,7 @@ from utils3 import films_similaires, films_similaires2, films_similaires3
 # Charger les données
 chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
+df_tmdbF = pd.read_csv(chemin_bd + 'resultat/df_tmdb3.csv')
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 
 # Fonction pour réinitialiser la recherche
@@ -44,7 +45,7 @@ elif selection == "Recommandation 🎬":
 
         if film_trouve:
             st.success(f"⏳ Je cherche des films similaires à {film}!")
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3, col4, col5 = st.columns(5)
             
             with col1:
                 vote_button = st.button("👍 Par vote")
