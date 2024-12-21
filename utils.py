@@ -5,13 +5,14 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler
 import streamlit as st
 import pandas as pd
+import re
 
 chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 # df_filtered = df_filtered.reset_index(drop=True)
 
-# Fonction films_similaires
+# Fonction films_similaires par vote
 def films_similaires(film_nom, df):
     try:
         # Préparer les caractéristiques pour le modèle Nearest Neighbors
@@ -58,5 +59,4 @@ def films_similaires(film_nom, df):
     except Exception as e:
         st.error(f"Erreur lors du traitement : {e}")
         return None
-
-
+    
