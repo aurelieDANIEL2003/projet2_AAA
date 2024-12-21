@@ -146,72 +146,91 @@ def films_similaires2(film_nom, df, df_tmdb):
 
 ########## par acteur  
 
+
 def films_similaires3(film_nom, df, df_tmdb):
     try:
-        # Étape 1 : Vérifier si le film recherché existe dans la base
+        # Étape 1 : Vérifier si le film existe dans la base
         film_data = df[df['title'].str.lower() == film_nom.lower()]
         if film_data.empty:
             return f"Le film '{film_nom}' n'existe pas dans la base."
-        
-        # Debugging : Vérifier les données du film recherché
-        st.write("Données du film recherché :", film_data)
 
-        # Étape 2 : Récupérer les acteurs du film recherché
-        two_actors = film_data.iloc[0]['two_actors']
-        if isinstance(two_actors, str):
-            # Convertir les acteurs en vraie liste si nécessaire
-            two_actors = eval(two_actors)
-        if not isinstance(two_actors, list):
-            two_actors = []
+        # Étape 2 : Récupérer les acteurs associés au film recherché
+        film_actors = film_data.iloc[0]['two_actors']
 
-        st.write(f"Acteurs du film recherché ({film_nom}) :", two_actors)
+        # Nettoyage des acteurs pour s'assurer qu'ils sont au bon format
+        if isinstance(film_actors, str):
+            film_actors_list = [actor.strip() for actor in film_actors.split(',')]  # Si c'est une chaîne
+        elif isinstance(film_actors, list):
+            film_actors_list = film_actors
+        else:
+            return f"Les acteurs du film '{film_nom}' ne sont pas au bon format."
 
-        # Extraire les deux acteurs ou gérer l'absence
-        actor1 = two_actors[0].strip() if len(two_actors) > 0 else None
-        actor2 = two_actors[1].strip() if len(two_actors) > 1 else None
+        # Vérifier qu'au moins deux acteurs existent
+        if len(film_actors_list) < 2:
+            return f"Le film '{film_nom}' n'a pas suffisamment d'acteurs pour effectuer la recherche."
 
-        st.write(f"Acteur 1 : {actor1}, Acteur 2 : {actor2}")
+        # Étape 3 : Fonction pour vérifier la présence d'un acteur
+        def verifier_presence(element, mot):
+            if isinstance(element, list):  # Si c'est une liste
+                return any(mot.lower() in acteur.lower() for acteur in element)
+            elif isinstance(element, str):  # Si c'est une chaîne
+                return mot.lower() in element.lower()
+            return False
 
-        if not actor1 and not actor2:
-            return f"Les acteurs pour le film '{film_nom}' ne sont pas disponibles ou pas au bon format."
+        # Rechercher des films contenant actor1
+        actor1 = film_actors_list[0]
+        df['presence_actor1'] = df['two_actors'].apply(lambda x: verifier_presence(x, actor1))
+        df_actor1 = df[df['presence_actor1']].drop(columns=['presence_actor1']).reset_index(drop=True)
 
-        # Étape 3 : Filtrer les films avec des acteurs communs
-        df_actor1 = df[df['two_actors'].apply(lambda x: actor1 in x if isinstance(x, list) else False)] if actor1 else pd.DataFrame()
-        df_actor2 = df[df['two_actors'].apply(lambda x: actor2 in x if isinstance(x, list) else False)] if actor2 else pd.DataFrame()
+        # Rechercher des films contenant actor2
+        actor2 = film_actors_list[1]
+        df['presence_actor2'] = df['two_actors'].apply(lambda x: verifier_presence(x, actor2))
+        df_actor2 = df[df['presence_actor2']].drop(columns=['presence_actor2']).reset_index(drop=True)
 
-        # Fusionner les deux DataFrames (sans doublons)
-        df_filtered_actors = pd.concat([df_actor1, df_actor2]).drop_duplicates().reset_index(drop=True)
+        # Vérifier les résultats pour actor1
+        if len(df_actor1) <= 1:  # Le film recherché est le seul avec cet acteur
+            message_actor1 = f"Le film '{film_nom}' est le seul contenant l'acteur '{actor1}'."
+        else:
+            message_actor1 = None
 
-        st.write("Films filtrés par acteurs communs :", df_filtered_actors[['title', 'two_actors']])
+        # Vérifier les résultats pour actor2
+        if len(df_actor2) <= 1:  # Le film recherché est le seul avec cet acteur
+            message_actor2 = f"Le film '{film_nom}' est le seul contenant l'acteur '{actor2}'."
+        else:
+            message_actor2 = None
 
-        # Vérifier si des films ont été trouvés après filtrage
-        if df_filtered_actors.empty:
-            return f"Aucun film trouvé avec les acteurs communs à '{film_nom}'."
+        # Si aucun autre film avec actor1 et actor2 n'est trouvé
+        if message_actor1 and message_actor2:
+            return f"{message_actor1}\n{message_actor2}"
 
-        # Étape 4 : Vérifier les colonnes nécessaires pour KNN
+        # Combiner les films contenant actor1 et actor2 pour KNN
+        df_combined = pd.concat([df_actor1, df_actor2]).drop_duplicates().reset_index(drop=True)
+
+        # Vérifier les colonnes nécessaires pour KNN
         features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']
-        if not all(feature in df_filtered_actors.columns for feature in features):
-            return f"Certaines colonnes nécessaires pour KNN sont manquantes : {features}"
+        missing_features = [feature for feature in features if feature not in df_combined.columns]
+        if missing_features:
+            return f"Colonnes manquantes pour KNN : {missing_features}"
 
-        # Étape 5 : Normaliser les données
+        # Normaliser les données
         scaler = MinMaxScaler()
-        X = scaler.fit_transform(df_filtered_actors[features])
+        X = scaler.fit_transform(df_combined[features])
 
-        # Étape 6 : Initialiser le modèle KNN et trouver les films similaires
-        model = NearestNeighbors(n_neighbors=6, metric='euclidean')
+        # Initialiser KNN et trouver les films similaires
+        model = NearestNeighbors(n_neighbors=len(df_combined), metric='euclidean')
         model.fit(X)
 
         # Rechercher l'index du film donné
-        film_index = df_filtered_actors[df_filtered_actors['title'].str.lower() == film_nom.lower()].index
+        film_index = df_combined[df_combined['title'].str.lower() == film_nom.lower()].index
         if len(film_index) == 0:
             return f"Le film '{film_nom}' n'est pas dans la base filtrée."
 
         distances, indices = model.kneighbors([X[film_index[0]]])
 
-        # Étape 7 : Rassembler les résultats
+        # Rassembler les résultats
         resultats = []
         for idx in indices[0][1:]:  # Exclure le film d'origine
-            film_title = df_filtered_actors.iloc[idx]['title']
+            film_title = df_combined.iloc[idx]['title']
 
             # Récupérer les données additionnelles depuis df_tmdb
             lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
@@ -223,9 +242,95 @@ def films_similaires3(film_nom, df, df_tmdb):
                 "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
             })
 
+        # Ajouter les messages spécifiques pour actor1 et actor2 dans les résultats
+        if message_actor1:
+            resultats.insert(0, {"message": message_actor1})
+        if message_actor2:
+            resultats.insert(0, {"message": message_actor2})
+
         return resultats
 
     except Exception as e:
-        st.error(f"Erreur lors du traitement : {e}")
-        return None
+        return f"Erreur lors du traitement : {e}"
+
+
+
+
+# def films_similaires3(film_nom, df, df_tmdb):
+#     try:
+#         # Étape 1 : Vérifier si le film existe dans la base
+#         film_data = df[df['title'].str.lower() == film_nom.lower()]
+#         if film_data.empty:
+#             return f"Le film '{film_nom}' n'existe pas dans la base."
+
+#         # Étape 2 : Récupérer les acteurs associés au film recherché
+#         film_actors = film_data.iloc[0]['two_actors']
+
+#         # Nettoyage des acteurs pour s'assurer qu'ils sont au bon format
+#         if isinstance(film_actors, str):
+#             film_actors_list = [actor.strip() for actor in film_actors.split(',')]  # Si c'est une chaîne
+#         elif isinstance(film_actors, list):
+#             film_actors_list = film_actors
+#         else:
+#             return f"Les acteurs du film '{film_nom}' ne sont pas au bon format."
+
+#         # Étape 3 : Fonction pour vérifier la présence d'un acteur
+#         def verifier_presence(element, mot):
+#             if isinstance(element, list):  # Si c'est une liste
+#                 return any(mot.lower() in acteur.lower() for acteur in element)
+#             elif isinstance(element, str):  # Si c'est une chaîne
+#                 return mot.lower() in element.lower()
+#             return False
+
+#         # Étape 4 : Rechercher un acteur spécifique dans les données
+#         actor1 = film_actors_list[0]  # Supposons que l'on recherche le premier acteur (modifiable)
+#         df['presence'] = df['two_actors'].apply(lambda x: verifier_presence(x, actor1))
+
+#         # Filtrer les films où cet acteur est présent
+#         df_actor1 = df[df['presence']].drop(columns=['presence']).reset_index(drop=True)
+
+#         # Vérifier si d'autres films contenant cet acteur existent
+#         if len(df_actor1) <= 1:  # Le film recherché est le seul avec cet acteur
+#             return f"Le film '{film_nom}' est le seul contenant l'acteur '{actor1}'."
+
+#         # Étape 5 : Vérifier les colonnes nécessaires pour KNN
+#         features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']
+#         missing_features = [feature for feature in features if feature not in df_actor1.columns]
+#         if missing_features:
+#             return f"Colonnes manquantes pour KNN : {missing_features}"
+
+#         # Étape 6 : Normaliser les données
+#         scaler = MinMaxScaler()
+#         X = scaler.fit_transform(df_actor1[features])
+
+#         # Étape 7 : Initialiser KNN et trouver les films similaires
+#         model = NearestNeighbors(n_neighbors=len(df_actor1), metric='euclidean')
+#         model.fit(X)
+
+#         # Rechercher l'index du film donné
+#         film_index = df_actor1[df_actor1['title'].str.lower() == film_nom.lower()].index
+#         if len(film_index) == 0:
+#             return f"Le film '{film_nom}' n'est pas dans la base filtrée."
+
+#         distances, indices = model.kneighbors([X[film_index[0]]])
+
+#         # Étape 8 : Rassembler les résultats
+#         resultats = []
+#         for idx in indices[0][1:]:  # Exclure le film d'origine
+#             film_title = df_actor1.iloc[idx]['title']
+
+#             # Récupérer les données additionnelles depuis df_tmdb
+#             lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
+#             imdb_id = df_tmdb[df_tmdb['title'] == film_title]['imdb_id'].values
+
+#             resultats.append({
+#                 "title": film_title,
+#                 "poster_path": lien_poster[0] if len(lien_poster) > 0 else None,
+#                 "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
+#             })
+
+#         return resultats
+
+#     except Exception as e:
+#         return f"Erreur lors du traitement : {e}"
 
