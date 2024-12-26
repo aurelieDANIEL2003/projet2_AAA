@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
-from utils import films_similaires
+from utils1 import films_similaires
 from utils2 import films_similaires2
 from utils3 import films_similaires3
 # Charger les données
@@ -42,7 +42,7 @@ elif selection == "Recommandation 🎬":
         film_trouve = df_filtered['title'].str.lower().eq(film.lower()).any()
 
         if film_trouve:
-            st.success(f"⏳ Je cherche des films similaires à **{film}**!")
+            st.success(f"🔍 Je cherche des films similaires à **{film}**!")
             col1, col2, col3 = st.columns(3)
             
             with col1:
@@ -54,7 +54,7 @@ elif selection == "Recommandation 🎬":
             
             # Recommandation par vote
             if vote_button:
-                st.write("🔍 Recherche de recommandations par vote...")
+                st.write("⏳ Recherche de recommandations par vote...")
                 resultats = films_similaires(film, df_filtered)
                 if resultats:
                     for res in resultats:
@@ -68,7 +68,7 @@ elif selection == "Recommandation 🎬":
 
             # Recommandation par genre
             if genre_button:
-                st.write("🔍 Recherche de recommandations par genre...")
+                st.write("⏳ Recherche de recommandations par genre...")
                 resultats = films_similaires2(film, df_filtered, df_tmdb)
                 if isinstance(resultats, list):
                     for res in resultats:
@@ -82,7 +82,7 @@ elif selection == "Recommandation 🎬":
 
             # Recommandation par acteur
             if actor_button:
-                st.write("🔍 Recherche de recommandations par acteur...")
+                st.write("⏳ Recherche de recommandations par acteur...")
                 resultats = films_similaires3(film, df_filtered, df_tmdb)
                 if isinstance(resultats, list):
                     for res in resultats:

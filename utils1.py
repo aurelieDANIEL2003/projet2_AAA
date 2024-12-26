@@ -13,7 +13,7 @@ df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 # df_filtered = df_filtered.reset_index(drop=True)
 
 # Fonction films_similaires par vote
-def films_similaires(film_nom, df):
+def films_similaires(film_nom, df, df_tmdb):
     try:
         # Préparer les caractéristiques pour le modèle Nearest Neighbors
         features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']

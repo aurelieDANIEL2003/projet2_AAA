@@ -3,7 +3,7 @@ from streamlit_option_menu import option_menu
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler
-from utils import films_similaires
+from utils1 import films_similaires
 
 chemin_bd = r"./bd_ignore/"
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
