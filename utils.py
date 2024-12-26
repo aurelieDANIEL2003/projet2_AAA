@@ -14,8 +14,18 @@ df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 # df_filtered = df_filtered.reset_index(drop=True)
 
 # Fonction films_similaires par vote
+chemin_bd = r"./bd_ignore/"
+df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
+df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
+# df_filtered = df_filtered.reset_index(drop=True)
+
+# Fonction films_similaires par vote
 def films_similaires(film_nom, df):
     try:
+        # Normaliser les titres pour éviter les problèmes de correspondance
+        df_tmdb['title_normalized'] = df_tmdb['title'].str.lower().str.strip()
+        df['title_normalized'] = df['title'].str.lower().str.strip()
+
         # Préparer les caractéristiques pour le modèle Nearest Neighbors
         features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']
         df_encoded = pd.concat(
@@ -30,7 +40,7 @@ def films_similaires(film_nom, df):
         model.fit(X)
 
         # Rechercher l'index du film donné
-        film_index = df[df['title'].str.lower() == film_nom.lower()].index
+        film_index = df[df['title_normalized'] == film_nom.lower().strip()].index
 
         if len(film_index) == 0:
             return None
@@ -40,24 +50,26 @@ def films_similaires(film_nom, df):
 
         # Retourner les résultats avec lien
         resultats = []
-        for i, idx in enumerate(indices[0][1:], start=1):  # Exclure le film d'origine
-            film_title = df_filtered.iloc[idx]['title']
-            #distance = distances[0][i]
-            
-            # Récupérer le lien depuis df_tmdb
-            lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
-            imdb_id = df_tmdb[df_tmdb['title'] == film_title]['imdb_id'].values
+        for idx in indices[0][1:]:  # Exclure le film d'origine
+            film_title = df.iloc[idx]['title']
 
-            resultats.append({
-                "title": film_title,
-                #"distance": distance,
-                "poster_path": lien_poster[0] if len(lien_poster) > 0 else None, 
-                "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
-            })
+            try:
+                # Récupérer le lien depuis df_tmdb
+                lien_poster = df_tmdb[df_tmdb['title_normalized'] == film_title.lower()]['poster_path'].values
+                imdb_id = df_tmdb[df_tmdb['title_normalized'] == film_title.lower()]['imdb_id'].values
+
+                resultats.append({
+                    "title": film_title,
+                    "poster_path": lien_poster[0] if len(lien_poster) > 0 else None,
+                    "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
+                })
+            except IndexError:
+                st.warning(f"Impossible de trouver les informations pour le film : {film_title}")
 
         return resultats
 
     except Exception as e:
         st.error(f"Erreur lors du traitement : {e}")
         return None
+
     
