@@ -11,6 +11,7 @@ chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 # df_filtered = df_filtered.reset_index(drop=True)
+df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered2.csv')
     
 ########## par acteur  
 def films_similaires3(film_nom, df, df_tmdb):

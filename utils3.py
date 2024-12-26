@@ -1,5 +1,3 @@
-
-#copie 26/12/2024 à 10:10
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -16,7 +14,7 @@ df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 
 ########## par acteur
 
-def films_similaires3(acteur_nom, df, df_tmdb):
+def films_similaires_par_acteur(acteur_nom, df, df_tmdb):
     """
     Rechercher des films similaires à partir d'un acteur donné.
     """

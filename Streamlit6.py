@@ -28,16 +28,13 @@ df_filtered['title_normalized'] = df_filtered['title'].str.lower().str.strip()
 with st.sidebar:
     selection = option_menu(
         menu_title=None,
-        options=["Accueil 🙋🏼‍♀️", "Recommandation 🎬", "KPI 📊"],
-        icons=["house", "film", "bar-chart"],
+        options=["Accueil 🙋🏼‍♀️", "Recommandation par film 🎬", "Recommandation par acteur 🎭", "KPI 📊"],
+        icons=["house", "film", "film", "bar-chart"],
         menu_icon="cast",
         default_index=0
     )
 
-    #     # Bouton pour réinitialiser la recherche
-    #     # Affichage conditionnel pour "Recommandation 🎬"
-    # if selection == "Recommandation 🎬":
-    #     #st.write("### Options supplémentaires")
+   
 # Page d'accueil
 if selection == "Accueil 🙋🏼‍♀️":
     st.title('Bienvenue au CINÉMA ! 🎥')
@@ -47,8 +44,8 @@ if selection == "Accueil 🙋🏼‍♀️":
     """)
 
 # Page de recommandation
-elif selection == "Recommandation 🎬":
-    st.title("Recommandation de films 🎬")
+elif selection == "Recommandation par film 🎬":
+    st.title("Recommandation par film 🎬")
     
     # Recherche d'un film
     film_nom = st.text_input("Cherchez un film par titre ou par partie de titre :")
@@ -153,8 +150,9 @@ elif selection == "Recommandation 🎬":
                 st.error("❌ Aucune recommandation trouvée par vote.")                
 
 
-####################
-
+###
+elif selection == "Recommandation par acteur 🎭":
+    st.title("Recommandation par acteur 🎭")
     # Champ de recherche par acteur
     # Interface utilisateur pour la recherche par acteur
     acteur = st.text_input("Cherchez un acteur :", value="", key="acteur")
@@ -349,86 +347,3 @@ elif selection == "KPI":
 
 
 
-
-
-            
-            # Recommandation par vote
-    # # Recommandation par vote
-    # if vote_button:
-    #     st.write("🔍 Recherche de recommandations par vote...")
-    #     resultats = films_similaires(film, df_filtered)
-    #     if resultats:
-    #         cols = st.columns(3)  # Trois colonnes pour l'affichage côte à côte
-    #         for idx, res in enumerate(resultats):
-    #             title = res.get('title', 'Titre inconnu')
-    #             poster_path = res.get('poster_path')
-    #             imdb_id = res.get('imdb_id')
-
-    #             with cols[idx % 3]:
-    #                 if poster_path:
-    #                     st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
-    #                 if imdb_id:
-    #                     st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
-    #     else:
-    #         st.error("❌ Aucune recommandation trouvée par vote.")
-
-
-    #         # Recommandation par genre
-    #         if genre_button:
-    #             st.write("🔍 Recherche de recommandations par genre...")
-    #             resultats = films_similaires2(film, df_filtered, df_tmdb)
-    #             if isinstance(resultats, list):
-    #                 for res in resultats:
-    #                     st.write(f"- **{res.get('title', 'Titre inconnu')}**")
-    #                     if res.get('imdb_id'):
-    #                         st.write(f"[Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
-    #                     if res.get('poster_path'):
-    #                         st.image(f"https://image.tmdb.org/t/p/w500{res['poster_path']}", width=200)
-    #             else:
-    #                 st.error(resultats)  # Affiche le message d'erreur retourné par films_similaires2
-
-#             # Recommandation par acteur
-#             if actor_button:
-#                 st.write("🔍 Recherche de recommandations par acteur...")
-#                 resultats = films_similaires3(film, df_filtered, df_tmdb)
-#                 if isinstance(resultats, list):
-#                     for res in resultats:
-#                         st.write(f"- **{res.get('title', 'Titre inconnu')}**")
-#                         if res.get('imdb_id'):
-#                             st.write(f"[Lien du film](https://www.imdb.com/title/{res['imdb_id']}/)")
-#                         if res.get('poster_path'):
-#                             st.image(f"https://image.tmdb.org/t/p/w500{res['poster_path']}", width=200)
-#                 else:
-#                     st.error(resultats)  # Affiche le message d'erreur retourné par films_similaires3
-#         else:
-#             st.error(f"❌ Le film **'{film}'** n'a pas été trouvé dans la base.")
-#     else:
-#         st.info("🔎 Entrez un titre de film pour rechercher des recommandations.")
-
-# # Page KPI
-# elif selection == "KPI":
-#     st.title("KPI")
-#     try:
-#         df_final_KPI = pd.read_csv(chemin_bd + "resultat/df_final.csv")
-#         st.bar_chart(data=df_final_KPI, x='', y='count')
-#     except FileNotFoundError:
-#         st.error("Le fichier 'df_final.csv' est introuvable.")
-
-
-# # Rechercher les films correspondant au pattern de recherche
-        # pattern = f"^{re.escape(film)}.*"  # Recherche qui commence par "film" (insensible à la casse)
-        # films_matches = df_tmdb[df_tmdb['title'].str.contains(pattern, flags=re.IGNORECASE, regex=True)].drop_duplicates(subset=['title'])
-
-        # if not films_matches.empty:
-        #     st.success(f"⏳ Affichage des films correspondant à **{film}**")
-        #     # Ajout de reset_index pour éviter les conflits d'index
-        #     films_matches = films_matches.reset_index(drop=True)
-
-        #     # Afficher les affiches des films correspondants côte à côte
-        #     cols = st.columns(3)  # Trois colonnes pour l'affichage côte à côte
-        #     for idx, (_, row) in enumerate(films_matches.iterrows()):
-        #         affiche = row.get('poster_path')
-        #         title = row.get('title', 'Titre inconnu')
-        #         with cols[idx % 3]:  # Répartir les affiches dans les colonnes
-        #             if affiche:
-        #                 st.image(f"https://image.tmdb.org/t/p/w500{affiche}", width=150, caption=title)
