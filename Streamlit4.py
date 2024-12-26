@@ -3,7 +3,7 @@ from streamlit_option_menu import option_menu
 import pandas as pd
 from utils1 import films_similaires
 from utils2 import films_similaires2
-from utils3 import films_similaires3
+from utils4 import films_similaires3
 
 # Charger les données
 chemin_bd = r"./bd_ignore/"
