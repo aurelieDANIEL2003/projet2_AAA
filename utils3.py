@@ -61,7 +61,9 @@ def films_similaires3(film_nom, df, df_tmdb):
 
         # Supprimer les colonnes temporaires
         df_combined = df_combined.drop(columns=['contains_actor1', 'contains_actor2'], errors='ignore')
+        print(df_combined)
 
+        
         # Étape 3 : Collecte des résultats
         resultats = []
         for _, row in df_combined.iterrows():
