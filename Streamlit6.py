@@ -210,34 +210,63 @@ elif selection == "Recommandation par acteur":
 
 
 ### recommandation 3 films au hasard
-
-elif selection == "Recommandation Surprise":
+elif selection == "Surprise":
     st.title("Recommandation Surprise")
     
-    # Recherche de 3 films au hasard 
-    # Utiliser random.randint pour choisir 3 indices aléatoires
-    resultats = df_filtered.sample(3)
-    st.write (f"### Film sélectionné : **{resultats}**")
+    # Recherche de 3 films au hasard
+    def film_hasard(df_filtered, df_tmdb):
+        #resultats = df_filtered.sample(3)  # Sélection de 3 films aléatoires
+        return df_filtered.sample(3)
+    
+    resultats = film_hasard(df_filtered, df_tmdb)
 
     if not resultats.empty:
-            cols = st.columns(3)  # Trois colonnes pour afficher les films
+        cols = st.columns(3)  # Trois colonnes pour afficher les films
+        resultats = resultats.reset_index(drop=True)
 
-            for idx, res in enumerate(resultats.iterrows()):
-                title = res.get('title', 'Titre inconnu')
-                poster_path = res.get('poster_path')
-                imdb_id = res.get('imdb_id')
+        for idx, res in resultats.iterrows():
+            title = res['title', 'Titre inconnu']
+            poster_path = res['poster_path']
+            imdb_id = res.get('imdb_id')
 
-                # Ajouter les informations dans les colonnes
-                with cols[idx % 3]:
-                    if poster_path and str(poster_path).strip():
-                        # Afficher l'affiche du film
+            with cols[idx % 3]:
+                if poster_path:
                         st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
-                    else:
-                        st.write(f"**{title}** (Aucune affiche disponible)")
-                    
-                    # Lien vers IMDb
-                    if imdb_id and str(imdb_id).strip():
-                        st.write(f"[Voir sur IMDb](https://www.imdb.com/title/{imdb_id}/)")
+                if imdb_id:
+                        st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
+                else:
+                        st.warning(f"IMDb ID manquant pour le film {title}")
+    else:
+            st.error("❌ Aucune recommandation trouvée par vote.")
+
+
+
+        #### jonathan
+
+        # for idx, res in resultats.iterrows():
+        #     title = res.get('title', 'Titre inconnu')
+        #     #poster_path = res['poster_path']
+        #     #imdb_id = res['imdb_id']
+        #     poster_path = res.get('poster_path')
+        #     imdb_id = res.get('imdb_id')
+
+        #     col_courante = cols[idx % 3]
+        #     # Ajouter les informations dans les colonnes
+        #     with col_courante :
+        #         if pd.notna(poster_path) :
+        #             # Afficher l'affiche du film
+        #             #st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
+        #             st.write(f"![poster](https://image.tmdb.org/t/p/w500{poster_path}")
+        #         else:
+        #             st.write(f"**{title}** (Aucune affiche disponible)")
+
+        #         # Lien vers IMDb
+        #         if imdb_id and str(imdb_id).strip():
+        #             st.write(f"[Voir sur IMDb](https://www.imdb.com/title/{imdb_id}/)")
+
+    # st.write(f"### Films sélectionnés :")
+    # st.write(resultats)
+
 
 
 # Page KPI
