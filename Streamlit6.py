@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
+import random
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import MinMaxScaler
 from utils1 import films_similaires
@@ -28,24 +29,24 @@ df_filtered['title_normalized'] = df_filtered['title'].str.lower().str.strip()
 with st.sidebar:
     selection = option_menu(
         menu_title=None,
-        options=["Accueil 🙋🏼‍♀️", "Recommandation par film 🎬", "Recommandation par acteur 🎭", "KPI 📊"],
-        icons=["house", "film", "film", "bar-chart"],
+        options=["Accueil", "Recommandation par film", "Recommandation par acteur", "Surprise", "KPI"],
+        icons=["house", "film", "film", "film", "bar-chart"],
         menu_icon="cast",
         default_index=0
     )
 
    
 # Page d'accueil
-if selection == "Accueil 🙋🏼‍♀️":
+if selection == "Accueil":
     st.title('Bienvenue au CINÉMA ! 🎥')
     st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
     st.write("""
         Recommandations personnalisées de films Made by Aurélie, Anissa et Anaëlle. 🎬
     """)
 
-# Page de recommandation
-elif selection == "Recommandation par film 🎬":
-    st.title("Recommandation par film 🎬")
+# Page de recommandation film
+elif selection == "Recommandation par film":
+    st.title("Recommandation par film")
     
     # Recherche d'un film
     film_nom = st.text_input("Cherchez un film par titre ou par partie de titre :")
@@ -62,8 +63,8 @@ elif selection == "Recommandation par film 🎬":
         results = search_movies(film_nom, df_filtered)
 
         if not results.empty:
-            st.write("### Films trouvés correspondant à votre recherche :")
-            st.dataframe(results[['title', 'genres']])
+            # st.write("### Films trouvés correspondant à votre recherche :")
+            # st.dataframe(results[['title', 'genres']])
 
             # Étape 2 : Sélectionner un film parmi les résultats
             selected_title = st.selectbox(
@@ -150,16 +151,47 @@ elif selection == "Recommandation par film 🎬":
                 st.error("❌ Aucune recommandation trouvée par vote.")                
 
 
-###
-elif selection == "Recommandation par acteur 🎭":
-    st.title("Recommandation par acteur 🎭")
+### recommandation par acteur
+
+
+elif selection == "Recommandation par acteur":
+    st.title("Recommandation par acteur")
     # Champ de recherche par acteur
     # Interface utilisateur pour la recherche par acteur
-    acteur = st.text_input("Cherchez un acteur :", value="", key="acteur")
+    actor = st.text_input("Cherchez un acteur :", value="", key="acteur")
 
-    if acteur:
-        st.write(f"🎭 Recherche des films avec l'acteur **{acteur}**...")
-        resultats_acteur = films_similaires_par_acteur(acteur, df_filtered_actor, df_tmdb)
+    def search_actor(actor, df):
+        results = df[df['two_actors'].str.contains(actor, case=False, na=False)]
+        return results
+    
+  
+    if actor:
+        # Étape 1 : Recherche des films correspondants
+        results = search_actor(actor, df_filtered)
+        print (results)
+        if not results.empty:
+            # st.write("### Films trouvés correspondant à votre recherche :")
+            # st.dataframe(results[['title', 'genres']])
+
+            # Étape 2 : Sélectionner un film parmi les résultats
+            selected_actor = st.selectbox(
+                "Sélectionnez un acteur :",
+                options=results['two_actors'].tolist()
+                
+            )
+            print (selected_actor)
+
+            if selected_actor:
+                selected_actor = results[results['two_actors'] == selected_actor]
+                imdb_id = selected_actor['imdb_id'].iloc[0]
+
+                st.write(f"### Film sélectionné : **{selected_actor}**")
+                #st.write(f"L'identifiant IMDb du film est : **{imdb_id}**")
+                st.write(f"[Voir le film](https://www.imdb.com/title/{imdb_id}/)")
+
+    if actor:
+        st.write(f"🎭 Recherche des films avec l'acteur **{actor}**...")
+        resultats_acteur = films_similaires_par_acteur(actor, df_filtered, df_tmdb)
 
         if isinstance(resultats_acteur, list) and resultats_acteur:
             cols = st.columns(3)  # Trois colonnes pour l'affichage côte à côte
@@ -174,7 +206,38 @@ elif selection == "Recommandation par acteur 🎭":
                     if imdb_id:
                             st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
         else:
-            st.error(f"❌ Aucun film trouvé avec l'acteur **{acteur}**.")
+            st.error(f"❌ Aucun film trouvé avec l'acteur **{actor}**.")
+
+
+### recommandation 3 films au hasard
+
+elif selection == "Recommandation Surprise":
+    st.title("Recommandation Surprise")
+    
+    # Recherche de 3 films au hasard 
+    # Utiliser random.randint pour choisir 3 indices aléatoires
+    resultats = df_filtered.sample(3)
+    st.write (f"### Film sélectionné : **{resultats}**")
+
+    if not resultats.empty:
+            cols = st.columns(3)  # Trois colonnes pour afficher les films
+
+            for idx, res in enumerate(resultats.iterrows()):
+                title = res.get('title', 'Titre inconnu')
+                poster_path = res.get('poster_path')
+                imdb_id = res.get('imdb_id')
+
+                # Ajouter les informations dans les colonnes
+                with cols[idx % 3]:
+                    if poster_path and str(poster_path).strip():
+                        # Afficher l'affiche du film
+                        st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
+                    else:
+                        st.write(f"**{title}** (Aucune affiche disponible)")
+                    
+                    # Lien vers IMDb
+                    if imdb_id and str(imdb_id).strip():
+                        st.write(f"[Voir sur IMDb](https://www.imdb.com/title/{imdb_id}/)")
 
 
 # Page KPI

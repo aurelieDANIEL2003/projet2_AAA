@@ -38,7 +38,7 @@ def films_similaires3(film_nom, df, df_tmdb):
             return [{"message": f"Les acteurs du film '{film_nom}' ne sont pas au bon format."}]
 
         # Vérifier qu'il y a au moins deux acteurs
-        if len(film_actors_list) < 2:
+        if len(film_actors_list) < 1:
             return [{"message": f"Le film '{film_nom}' n'a pas suffisamment d'acteurs pour effectuer la recherche."}]
 
         actor1, actor2 = film_actors_list[0], film_actors_list[1]

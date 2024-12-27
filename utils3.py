@@ -10,6 +10,7 @@ import re
 chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
+# df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered2.csv')
 # df_filtered = df_filtered.reset_index(drop=True)
 
 ########## par acteur
@@ -21,7 +22,7 @@ def films_similaires_par_acteur(acteur_nom, df, df_tmdb):
     # Étape 1 : Recherche des films avec l'acteur
     resultats = []
     for _, row in df.iterrows():
-        actors = row.get('actors', '')
+        actors = row.get('two_actors', '')
         if isinstance(actors, str) and acteur_nom.lower() in actors.lower():  # Vérifier si l'acteur est présent
             resultats.append({
                 "title": row['title'],
