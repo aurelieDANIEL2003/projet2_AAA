@@ -1,3 +1,4 @@
+#copie 26/12/2024 à 10:10
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
