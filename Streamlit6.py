@@ -53,19 +53,19 @@ elif selection == "Recommandation par film":
 
 
 # # Fonction pour rechercher des titres
-    def search_movies(film_nom, df):
+    def search_movies(film_nom, df, df_tmdb):
+        # Rechercher les films dans df_filtered
         results = df[df['title'].str.contains(film_nom, case=False, na=False)]
+
+        # Ajouter les colonnes poster_path et imdb_id à partir de df_tmdb
+        results = results.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
         return results
     
-  
     if film_nom:
         # Étape 1 : Recherche des films correspondants
-        results = search_movies(film_nom, df_filtered)
+        results = search_movies(film_nom, df_filtered, df_tmdb)
 
         if not results.empty:
-            # st.write("### Films trouvés correspondant à votre recherche :")
-            # st.dataframe(results[['title', 'genres']])
-
             # Étape 2 : Sélectionner un film parmi les résultats
             selected_title = st.selectbox(
                 "Sélectionnez un film :",
@@ -73,12 +73,20 @@ elif selection == "Recommandation par film":
             )
 
             if selected_title:
+                # Récupérer les données du film sélectionné
                 selected_movie = results[results['title'] == selected_title]
-                imdb_id = selected_movie['imdb_id'].iloc[0]
+                imdb_id = selected_movie['imdb_id'].iloc[0] if 'imdb_id' in selected_movie.columns else None
+                poster_path = selected_movie['poster_path'].iloc[0] if 'poster_path' in selected_movie.columns else None
 
+                # Afficher les informations du film sélectionné
                 st.write(f"### Film sélectionné : **{selected_title}**")
-                #st.write(f"L'identifiant IMDb du film est : **{imdb_id}**")
-                st.write(f"[Voir le film](https://www.imdb.com/title/{imdb_id}/)")
+                if imdb_id:
+                    st.write(f"[Voir le film sur IMDb](https://www.imdb.com/title/{imdb_id}/)")
+                if poster_path:
+                    st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150)
+                else:
+                    st.image(chemin_bd + "medias/affiche.jpeg")
+                st.write("🔍 Recommandations")
 
         # Ajout des boutons pour les différentes recommandations
         cols = st.columns(3)
@@ -91,7 +99,7 @@ elif selection == "Recommandation par film":
 
         # Recommandation par vote
         if vote_button:
-            st.write("🔍 Recherche de recommandations par vote...")
+            #st.write("🔍 Recherche de recommandations par vote...")
             resultats = films_similaires(selected_title, df_filtered, df_tmdb)
 
             if isinstance(resultats, list) and resultats:
@@ -113,7 +121,7 @@ elif selection == "Recommandation par film":
 
         # Recommandation par genre
         if genre_button:
-            st.write("🔍 Recherche de recommandations par genre...")
+            #st.write("🔍 Recherche de recommandations par genre...")
             resultats = films_similaires2(selected_title, df_filtered, df_tmdb)
 
             if isinstance(resultats, list):
@@ -133,7 +141,7 @@ elif selection == "Recommandation par film":
 
         # Recommandation par acteur
         if actor_button:
-            st.write("### Recommandations par acteur ⭐")
+            #st.write("### Recommandations par acteur ⭐")
             resultats = films_similaires3(selected_title, df_filtered, df_tmdb)
             if resultats:
                 cols = st.columns(3)  # Trois colonnes pour l'affichage côte à côte
@@ -170,10 +178,8 @@ elif selection == "Recommandation par acteur":
         results = search_actor(actor, df_filtered)
         print (results)
         if not results.empty:
-            # st.write("### Films trouvés correspondant à votre recherche :")
-            # st.dataframe(results[['title', 'genres']])
-
-            # Étape 2 : Sélectionner un film parmi les résultats
+           
+            # Étape : Sélectionner un film parmi les résultats
             selected_actor = st.selectbox(
                 "Sélectionnez un acteur :",
                 options=results['two_actors'].tolist()
@@ -210,62 +216,47 @@ elif selection == "Recommandation par acteur":
 
 
 ### recommandation 3 films au hasard
+
 elif selection == "Surprise":
     st.title("Recommandation Surprise")
-    
-    # Recherche de 3 films au hasard
+
     def film_hasard(df_filtered, df_tmdb):
-        #resultats = df_filtered.sample(3)  # Sélection de 3 films aléatoires
-        return df_filtered.sample(3)
-    
+        return df_filtered.sample(3)  # Sélection de 3 films aléatoires
+
+    # Sélection de 3 films aléatoires
     resultats = film_hasard(df_filtered, df_tmdb)
 
+    # Joindre les colonnes de df_tmdb pour inclure poster_path
+    resultats = resultats.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
+    # Supprimer les doublons
+    resultats = resultats.drop_duplicates(subset='title', keep='first')
+
     if not resultats.empty:
-        cols = st.columns(3)  # Trois colonnes pour afficher les films
+        cols = st.columns(3)  # Crée des colonnes pour afficher les films
         resultats = resultats.reset_index(drop=True)
 
         for idx, res in resultats.iterrows():
-            title = res['title', 'Titre inconnu']
-            poster_path = res['poster_path']
+            title = res.get('title', 'Titre inconnu')
+            poster_path = res.get('poster_path')
             imdb_id = res.get('imdb_id')
 
-            with cols[idx % 3]:
-                if poster_path:
-                        st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
-                if imdb_id:
-                        st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
+            # Associe chaque film à une colonne
+            col_courante = cols[idx % 3]
+            with col_courante:
+                if pd.notna(poster_path):
+                    # Afficher l'affiche du film
+                    st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                 else:
-                        st.warning(f"IMDb ID manquant pour le film {title}")
-    else:
-            st.error("❌ Aucune recommandation trouvée par vote.")
+                    # Afficher l'image locale de remplacement
+                    st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption=title)
 
+                # Afficher le titre du film
+                st.write(f"**Titre :** {title}")
 
+                # Lien vers IMDb
+                if imdb_id and str(imdb_id).strip():
+                    st.write(f"[Lien IMDb](https://www.imdb.com/title/{imdb_id}/)")
 
-        #### jonathan
-
-        # for idx, res in resultats.iterrows():
-        #     title = res.get('title', 'Titre inconnu')
-        #     #poster_path = res['poster_path']
-        #     #imdb_id = res['imdb_id']
-        #     poster_path = res.get('poster_path')
-        #     imdb_id = res.get('imdb_id')
-
-        #     col_courante = cols[idx % 3]
-        #     # Ajouter les informations dans les colonnes
-        #     with col_courante :
-        #         if pd.notna(poster_path) :
-        #             # Afficher l'affiche du film
-        #             #st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
-        #             st.write(f"![poster](https://image.tmdb.org/t/p/w500{poster_path}")
-        #         else:
-        #             st.write(f"**{title}** (Aucune affiche disponible)")
-
-        #         # Lien vers IMDb
-        #         if imdb_id and str(imdb_id).strip():
-        #             st.write(f"[Voir sur IMDb](https://www.imdb.com/title/{imdb_id}/)")
-
-    # st.write(f"### Films sélectionnés :")
-    # st.write(resultats)
 
 
 
