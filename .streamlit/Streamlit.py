@@ -437,9 +437,11 @@ elif selection == "KPI":
       df_best_movies = df_best_movies.iloc[:,:4]
       df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
       
+      
       st.write('Les 3 meilleurs films et leurs caractéristiques')
+      st.image(chemin_bd + "medias/top3.png", width=500)        
       st.table(df_best_movies)
-
+      
     except FileNotFoundError:
         st.error("Le fichier 'df_final.csv' est introuvable.")
 
