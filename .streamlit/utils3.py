@@ -1,3 +1,4 @@
+#copie 02/01
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -15,57 +16,63 @@ df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
 
 ########## par acteur
 
-def films_similaires_par_acteur(acteur_nom, df, df_tmdb):
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+from sklearn.neighbors import NearestNeighbors
+from sklearn.preprocessing import MinMaxScaler
+import streamlit as st
+import pandas as pd
+import re
+
+chemin_bd = r"./bd_ignore/"
+df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
+df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
+# df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered2.csv')
+df_filtered = df_filtered.reset_index(drop=True)
+
+########## par acteur
+import pandas as pd
+
+# Génération de la liste des acteurs uniques
+list_actor = df_filtered['two_actors'].apply(
+    lambda x: [actor.strip() for actor in x.split(',')] if pd.notna(x) else []
+)
+actor_unique = set()
+for actor in list_actor:
+    actor_unique.update(actor)
+list_actor_unique = list(actor_unique)
+
+def films_par_acteur(acteur_nom, df, df_tmdb):
     """
-    Rechercher des films similaires à partir d'un acteur donné.
+    Trouver les films où un acteur donné est présent.
     """
-    # Étape 1 : Recherche des films avec l'acteur
-    resultats = []
+    acteur_nom = acteur_nom.strip().lower()  # Nettoyer et uniformiser le nom
+
+    # Nettoyage supplémentaire de la colonne two_actors
+    df['two_actors'] = df['two_actors'].str.strip().str.lower()
+
+    # Filtrer les films où l'acteur apparaît
+    films_acteur = []
     for _, row in df.iterrows():
-        actors = row.get('two_actors', '')
-        if isinstance(actors, str) and acteur_nom.lower() in actors.lower():  # Vérifier si l'acteur est présent
-            resultats.append({
-                "title": row['title'],
-                "poster_path": row.get('poster_path', None),
-                "imdb_id": row.get('imdb_id', None)
-            })
-
-    # Si aucun résultat trouvé pour l'acteur
-    if not resultats:
-        return []
-
-    # Étape 2 : Création du DataFrame pour les similarités
-    df_actor_films = pd.DataFrame(resultats)
-    features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']
-
-    # Vérification des colonnes nécessaires pour KNN
-    missing_features = [feature for feature in features if feature not in df.columns]
-    if missing_features:
-        return f"Colonnes manquantes pour KNN : {missing_features}"
-
-    # Normaliser les données
-    scaler = MinMaxScaler()
-    X = scaler.fit_transform(df[features])
-
-    # Initialiser KNN
-    model = NearestNeighbors(n_neighbors=min(len(df), 10), metric='euclidean')
-    model.fit(X)
-
-    # Trouver l'index des films avec cet acteur
-    film_indices = df[df['title'].str.lower().isin([res['title'].lower() for res in resultats])].index
-
-    similar_results = []
-    for film_index in film_indices:
-        distances, indices = model.kneighbors([X[film_index]])
-        for idx in indices[0][1:]:  # Exclure le film de départ
-            film_title = df.iloc[idx]['title']
-            if film_title.lower() not in [res['title'].lower() for res in similar_results]:
-                lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
-                imdb_id = df_tmdb[df_tmdb['title'] == film_title]['imdb_id'].values
-                similar_results.append({
-                    "title": film_title,
-                    "poster_path": lien_poster[0] if len(lien_poster) > 0 else None,
-                    "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
+        if pd.notna(row['two_actors']):
+            # Vérifier si l'acteur est dans la liste
+            if acteur_nom in row['two_actors']:
+                # Récupérer les informations du film
+                titre = row['title']
+                imdb_id = row.get('imdb_id', None)
+                poster_path = row.get('poster_path', None)
+                films_acteur.append({
+                    "title": titre,
+                    "imdb_id": imdb_id,
+                    "poster_path": poster_path
                 })
 
-    return similar_results
+    if not films_acteur:
+        return f"Aucun film trouvé pour l'acteur '{acteur_nom}'."
+
+    # Créer un DataFrame pour afficher les résultats
+    df_result = pd.DataFrame(films_acteur)
+    return df_result
+
+
