@@ -445,3 +445,46 @@ elif selection == "KPI":
         st.error("Le fichier 'df_final.csv' est introuvable.")
 
 
+#######################################
+# Hauteurs des barres pour simuler un podium
+podium_heights = [2, 1, 0.5]  # Hauteur du podium pour chaque position
+film_colors = ['gold', 'silver', 'bronze']  # Couleurs des podiums
+
+# Créer le graphique
+fig = go.Figure()
+
+# Ajouter le podium
+for i, film in enumerate(top_3_films['film']):
+    fig.add_trace(go.Bar(
+        x=[film], 
+        y=[podium_heights[i]],
+        name=f"Podium {i + 1}",
+        marker_color=film_colors[i],
+        showlegend=False
+    ))
+
+# Ajouter les scores comme annotations
+for i, row in top_3_films.iterrows():
+    fig.add_annotation(
+        x=row['film'],
+        y=podium_heights[i] + 0.1,  # Position légèrement au-dessus du podium
+        text=f"{row['score']} ⭐",
+        showarrow=False,
+        font=dict(size=12)
+    )
+
+# Configuration du graphique
+fig.update_layout(
+    title="Podium des 3 Meilleurs Films",
+    xaxis_title="Films",
+    yaxis_title="Position du Podium",
+    xaxis=dict(showline=False, showgrid=False, zeroline=False),
+    yaxis=dict(showline=False, showgrid=False, zeroline=False, range=[0, 3]),
+    plot_bgcolor='rgba(0,0,0,0)',  # Fond transparent
+    bargap=0.5
+)
+
+# Afficher le graphique sur Streamlit
+st.plotly_chart(fig)
+
+
