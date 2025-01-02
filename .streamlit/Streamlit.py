@@ -446,45 +446,32 @@ elif selection == "KPI":
 
 
 #######################################
-# Hauteurs des barres pour simuler un podium
-podium_heights = [2, 1, 0.5]  # Hauteur du podium pour chaque position
-film_colors = ['gold', 'silver', 'bronze']  # Couleurs des podiums
+# Graphique : Podium des 3 meilleurs films par période
+        df_final_KPI = df_final_KPI.assign(Top_3_films=df_final_KPI['Top 3 films'].str.split(','))
+        df_final_KPI = df_final_KPI.explode('Top_3_films')  # Une ligne par titre associé
 
-# Créer le graphique
-fig = go.Figure()
+        # Menu déroulant pour sélectionner une période
+        periode = st.selectbox("Sélectionnez une période :",  df_final_KPI["Période"].unique())
 
-# Ajouter le podium
-for i, film in enumerate(top_3_films['film']):
-    fig.add_trace(go.Bar(
-        x=[film], 
-        y=[podium_heights[i]],
-        name=f"Podium {i + 1}",
-        marker_color=film_colors[i],
-        showlegend=False
-    ))
+        # Filtrer les données en fonction de la période sélectionnée
+        filtered_data =  df_final_KPI[ df_final_KPI["Période"] == periode].sort_values(by="Score", ascending=False).head(3)
 
-# Ajouter les scores comme annotations
-for i, row in top_3_films.iterrows():
-    fig.add_annotation(
-        x=row['film'],
-        y=podium_heights[i] + 0.1,  # Position légèrement au-dessus du podium
-        text=f"{row['score']} ⭐",
-        showarrow=False,
-        font=dict(size=12)
-    )
+        plot_top3_films = px.bar(
+            data_frame=df_final_KPI,
+            x="période",              # Classement des films par période
+            y="Top_3_films",            # Titres des films
+            color="Top_3_films",        # Couleur pour chaque film
+            animation_frame="période",  # Animation basée sur les périodes
+            hover_name="Top_3_films",   # Affichage du titre au survol
+            title="Podium des 3 meilleurs films par période",
+            labels={"Top_3_films": "Films", "période": "Période"}
+        )
 
-# Configuration du graphique
-fig.update_layout(
-    title="Podium des 3 Meilleurs Films",
-    xaxis_title="Films",
-    yaxis_title="Position du Podium",
-    xaxis=dict(showline=False, showgrid=False, zeroline=False),
-    yaxis=dict(showline=False, showgrid=False, zeroline=False, range=[0, 3]),
-    plot_bgcolor='rgba(0,0,0,0)',  # Fond transparent
-    bargap=0.5
-)
-
-# Afficher le graphique sur Streamlit
-st.plotly_chart(fig)
+        plot_top3_films.update_layout(
+            xaxis_title="Période",
+            yaxis_title="Films",
+            showlegend=False
+        )
+        st.plotly_chart(plot_top3_films)
 
 
