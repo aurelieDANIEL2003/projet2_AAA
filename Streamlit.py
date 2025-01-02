@@ -383,7 +383,8 @@ elif selection == "KPI":
 
       #faire une liste de la colonne péridoe
       liste_periode = df_final_KPI['période'].tolist()
-      
+
+      st.write('Top 5 des acteurs')      
       #faire une barre de sélection de la période 
       annees = st.selectbox("Choisissez la période", liste_periode)
       
@@ -393,7 +394,7 @@ elif selection == "KPI":
       dico_labels = {'count':"Nombre d'apparitions",
                      'primaryName':"Acteurs"}   # dico pour renommer les axes
       
-      plot1 = px.bar(data_frame = df_top5_graph, x='count', y='primaryName', labels=dico_labels, orientation = 'h', title='Top 5 des acteurs', barmode = 'overlay', hover_name='primaryTitle', color_discrete_sequence =['#1b8585']*len(df_top5_graph))
+      plot1 = px.bar(data_frame = df_top5_graph, x='count', y='primaryName', labels=dico_labels, orientation = 'h', barmode = 'overlay', hover_name='primaryTitle', color_discrete_sequence =['#1b8585']*len(df_top5_graph))
       st.plotly_chart(plot1)    # graph en utilisant le df de la période selectionnée
       
 
@@ -409,7 +410,7 @@ elif selection == "KPI":
 
 
       #GRAPH 3
-      plot3 = px.line(data_frame = age_moyen1, x = 'période', y = 'age', range_y = [0,80], markers=True, color_discrete_sequence =['#1b8585']*len(df_top5_graph))
+      plot3 = px.line(data_frame = age_moyen1, x = 'période', y = 'age', range_y = [0,80], markers=True, color_discrete_sequence =['#1b8585']*len(df_top5_graph), title= 'Age moyen des acteurs')
       st.plotly_chart(plot3)
       
 
@@ -419,8 +420,8 @@ elif selection == "KPI":
       plot4 = go.Figure()
       plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_films'],name="Durée Moyenne Films",legendgroup = 'films', mode="lines+markers", marker_color='#61D2C7'))
       plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
-      plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_series'], name="Durée Moyenne Séries", legendgroup = 'séries', opacity=0.5, marker_color='#cb96b7'))
-      plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_series'], name='séries', legendgroup = 'séries', opacity=0.5, marker_color='#613650'))
+      plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_series'], name="Durée Moyenne Séries", legendgroup = 'séries', marker_color='#cb96b7'))
+      plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
       # Mise en page du graphique
       plot4.update_layout(
             title=dict(text="Comparaison des durées moyennes des films et séries"),
@@ -436,7 +437,7 @@ elif selection == "KPI":
       df_best_movies = df_best_movies.iloc[:,:4]
       df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
       
-
+      st.write('Les 3 meilleurs films et leurs caractéristiques')
       st.dataframe(df_best_movies, hide_index=True)
 
 
