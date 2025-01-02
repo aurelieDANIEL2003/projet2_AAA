@@ -10,8 +10,8 @@ from sklearn.preprocessing import MinMaxScaler
 from utils1 import films_similaires
 from utils2 import films_similaires2
 from utils3 import films_par_acteur
-from utils3bis import search_actor
-from utils4 import films_similaires3
+from utils4 import search_actor
+from utils5 import films_similaires3
 import ast 
 # import plotly.express as px
 # import plotly.graph_objects as go
@@ -200,8 +200,7 @@ elif selection == "Recommandation par film":
 
 
                 if not resultats_df.empty:
-                    st.write(f"🎭 Films avec l'acteur **{acteurs}** :")
-
+                    
                     # Créer une liste pour stocker les films à afficher
                     films_a_afficher = []
                     for _, row in resultats_df.iterrows():
