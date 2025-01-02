@@ -17,7 +17,7 @@ import ast
 import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
-import base64
+#import base64
 import re
 
 # Charger les données
