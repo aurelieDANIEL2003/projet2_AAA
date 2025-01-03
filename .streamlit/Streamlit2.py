@@ -61,12 +61,70 @@ else:
 # Lire le fichier CSV
 df_filtered_actor = pd.read_csv("df_filtered2.csv")
 
+# les images
+image_url = "https://drive.google.com/uc?id=1_CMnzTFdhjMzlcHUT7uhP5j-P2O2IfNu"
+image_affiche = "https://drive.google.com/uc?id=1pH6tNjNdKlnr6nRORncGIfMf0ZLaA1Tk&export=download"
+top3 = "https://drive.google.com/uc?id=1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0&export=download"
+podium = "https://drive.google.com/uc?id=1Lq-zVIU7ZKKOzGruHWzHf0N6SHlqeTVR&export=download"
 
-# Charger les données
-# chemin_bd = r"./bd_ignore/"
-# df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
-# df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
-# df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered2.csv')
+### les KPI chargement des fichiers
+# df_final_KPI
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1a-cbrolKGMHexMZqKd6kobgZjWNfkj6i&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("df_final.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+# Lire le fichier CSV
+df_final_KPI = pd.read_csv("df_final.csv")
+
+# df_top5_act_films
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1-tv_a2353fJdpRryNK8q3jOn2kSQZaV2&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("df_top5_act_films.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+
+# age_moyen
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1zMfxR90FQhjm4wcSEUgXtDSkGV23uV6H&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("age_moyen.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+
+# df_best_movies
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1XODwa3K0w1dgq4OKpOfCqPVRB51WhckT&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("df_best_movies.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+
+    # comparaison_FSa
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1JG3RalvkQ3orU9zdBT0rI-YLf24rMSrM&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("comparaison_FSa.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
@@ -88,7 +146,7 @@ with st.sidebar:
 # Page d'accueil
 if selection == "Accueil":
     st.title('Bienvenue au CINÉMA ! 🎥')
-    st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
+    st.image(image_url, width=500)
     st.write("""
         Recommandations personnalisées de films Made by Aurélie, Anissa et Anaëlle. 🎬
     """)
@@ -148,7 +206,7 @@ elif selection == "Recommandation par film":
                         if poster_path:
                             st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150)
                         else:
-                            st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption="Affiche non disponible")
+                            st.image(image_affiche, width=150, caption="Affiche non disponible")
                     else:
                         st.error("Les colonnes `imdb_id` ou `poster_path` sont manquantes dans les données sélectionnées.")
 
@@ -179,7 +237,7 @@ elif selection == "Recommandation par film":
                             if poster_path:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                             else:
-                                st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption="Affiche non disponible")
+                                st.image(image_affiche, width=150, caption="Affiche non disponible")
                             if imdb_id:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
                             else:
@@ -203,7 +261,7 @@ elif selection == "Recommandation par film":
                             if poster_path2:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path2}", width=150, caption=title2)
                             else:
-                                st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption="Affiche non disponible")
+                                st.image(image_affiche, width=150, caption="Affiche non disponible")
                             if imdb_id2:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id2}/)")
                             else:
@@ -277,7 +335,7 @@ elif selection == "Recommandation par film":
                                             width=150, 
                                             caption=film['title'])
                                     else:
-                                        st.image(chemin_bd + "medias/affiche.jpeg", 
+                                        st.image(image_affiche, 
                                             width=150, 
                                             caption=film['title'])
                                     
@@ -357,7 +415,7 @@ elif selection == "Recommandation par acteur":
                                        width=150, 
                                        caption=film['title'])
                             else:
-                                st.image(chemin_bd + "medias/affiche.jpeg", 
+                                st.image(image_affiche, 
                                        width=150, 
                                        caption=film['title'])
                             
@@ -401,7 +459,7 @@ elif selection == "Surprise":
                     st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                 else:
                     # Afficher l'image locale de remplacement
-                    st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption=title)
+                    st.image(image_affiche, width=150, caption=title)
 
                 # Afficher le titre du film
                 st.write(f"**Titre :** {title}")
@@ -419,11 +477,11 @@ elif selection == "KPI":
 
     st.title("KPI")
     try:
-      df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
-      df_top5_act_films = pd.read_csv(chemin_bd + 'resultat/df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
-      age_moyen1 = pd.read_csv(chemin_bd+"resultat/age_moyen.csv") #graph âge moyen par période
-      df_best_movies = pd.read_csv(chemin_bd+"resultat/df_best_movies.csv")
-      comparaison_FSduree =  pd.read_csv(chemin_bd + 'resultat/comparaison_FSa.csv')
+      df_final_KPI = pd.read_csv("df_final.csv")
+      df_top5_act_films = pd.read_csv("df_top5_act_films.csv")  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
+      age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
+      df_best_movies = pd.read_csv("df_best_movies.csv")
+      comparaison_FSduree =  pd.read_csv("comparaison_FSa.csv")
 
 
       #faire une liste de la colonne péridoe
@@ -487,8 +545,8 @@ elif selection == "KPI":
       
       
       st.subheader('Les 3 meilleurs films et leurs caractéristiques')
-      st.image(chemin_bd + "medias/top3.png", width=700)  
-      st.image(chemin_bd + "medias/tableau_podium.png", width=700)       
+      st.image(top3, width=700)  
+      st.image(podium, width=700)       
       #st.table(df_best_movies)
       
     except FileNotFoundError:
