@@ -10,7 +10,7 @@ import re
 chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
 df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
-# df_filtered = df_filtered.reset_index(drop=True)
+
 
 # par genre 
 
@@ -32,9 +32,7 @@ def films_similaires2(film_nom, df, df_tmdb):
         else:
             return f"Les genres du film '{film_nom}' ne sont pas au bon format."
 
-        # Debugging : Afficher les genres trouvés
-        # st.write(f"Genres du film recherché ({film_nom}):", film_genres_list)
-
+      
         # Étape 3 : Filtrer les films ayant au moins un genre commun
         df['genres'] = df['genres'].apply(
             lambda x: x.split(', ') if isinstance(x, str) else x
@@ -50,8 +48,6 @@ def films_similaires2(film_nom, df, df_tmdb):
         if df_genreF.empty:
             return f"Aucun film trouvé avec des genres similaires à '{film_nom}'."
 
-        # Debugging : Afficher les films filtrés
-        #st.write(f"Films filtrés avec des genres communs :", df_genreF[['title', 'genres']])
 
         # Étape 4 : Vérifier les colonnes nécessaires pour KNN
         features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']

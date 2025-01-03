@@ -2,14 +2,7 @@ import ast  # Pour convertir des chaînes en listes Python
 import pandas as pd
 
 def search_actor(actor_nom, df, df_tmdb):
-    """
-    Rechercher les films liés à un acteur en utilisant une liste unique d'acteurs.
-    
-    :param actor_nom: Nom ou partie du nom de l'acteur à rechercher
-    :param df: DataFrame principal contenant les informations sur les films et les acteurs
-    :param df_tmdb: DataFrame complémentaire contenant les posters et IDs IMDb
-    :return: DataFrame contenant les résultats de la recherche
-    """
+
     # Étape 1 : Génération de la liste des acteurs uniques
     list_actor = df['two_actors'].apply(
         lambda x: [actor.strip() for actor in ast.literal_eval(x)] if pd.notna(x) else []
