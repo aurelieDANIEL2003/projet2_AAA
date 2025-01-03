@@ -19,12 +19,54 @@ import plotly.graph_objects as go
 import base64
 import re
 
+import pandas as pd
+import requests
+
+# tmdb
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("df_tmdb2.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+# Lire le fichier CSV
+df_tmdb = pd.read_csv("df_tmdb2.csv")
+
+# df_filtered
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("df_filtered.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+# Lire le fichier CSV
+df_filtered = pd.read_csv("df_filtered.csv")
+
+# df_filtered_actor
+# URL de téléchargement direct
+url = "https://drive.google.com/uc?id=1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN&export=download"
+# Télécharger le fichier
+response = requests.get(url)
+if response.status_code == 200:
+    open("df_filtered2.csv", "wb").write(response.content)
+    print("Fichier téléchargé avec succès.")
+else:
+    print("Erreur lors du téléchargement.")
+# Lire le fichier CSV
+df_filtered_actor = pd.read_csv("df_filtered2.csv")
+
 
 # Charger les données
-chemin_bd = r"./bd_ignore/"
-df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
-df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
-df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered2.csv')
+# chemin_bd = r"./bd_ignore/"
+# df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
+# df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
+# df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered2.csv')
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
