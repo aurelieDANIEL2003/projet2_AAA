@@ -45,7 +45,7 @@ with st.sidebar:
 # Page d'accueil
 if selection == "Accueil":
     st.title('Bienvenue au CINÉMA ! 🎥')
-    st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
+    st.image(chemin_bd + "medias/logo_canape.jpeg", width=1000)
     st.write("""
         Recommandations personnalisées de films Made by Aurélie, Anissa et Anaëlle. 🎬
     """)
