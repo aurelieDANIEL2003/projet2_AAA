@@ -238,7 +238,6 @@ elif selection == "Recommandation par film":
                                             width=150, 
                                             caption=film['title'])
                                     
-                                    st.write(f"**{film['title']}**")
                                     if film['imdb_id']:
                                         st.write(f"[Lien IMDb](https://www.imdb.com/title/{film['imdb_id']}/)")
                 else:
@@ -319,7 +318,6 @@ elif selection == "Recommandation par acteur":
                                        width=150, 
                                        caption=film['title'])
                             
-                            st.write(f"**{film['title']}**")
                             if film['imdb_id']:
                                 st.write(f"[Lien IMDb](https://www.imdb.com/title/{film['imdb_id']}/)")
         else:
