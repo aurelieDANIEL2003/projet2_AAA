@@ -125,42 +125,86 @@ elif selection == "Recommandation par film":
                 st.write("### Recommandations par votes 👍")
                 resultats = films_similaires(selected_title, df_filtered, df_tmdb)
 
-                if isinstance(resultats, list) and resultats:
-                    cols = st.columns(3)  # Trois colonnes pour l'affichage côte à côte
-                    for idx, res in enumerate(resultats):
-                        title = res.get('title', 'Titre inconnu')
-                        poster_path = res.get('poster_path')
-                        imdb_id = res.get('imdb_id')
+                if not resultats.empty:
+                        
+                    # Créer une liste pour stocker les films à afficher
+                    films_a_afficher = []
+                    for _, row in resultats.iterrows():
+                        films_a_afficher.append({
+                            'title': row.get('title', 'Titre inconnu'),
+                            'poster_path': row.get('poster_path'),
+                            'imdb_id': row.get('imdb_id')
+                        })
 
-                        with cols[idx % 3]:
-                            if poster_path:
-                                st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
-                            if imdb_id:
-                                st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
-                            else:
-                                st.warning(f"IMDb ID manquant pour le film {title}")
+                    # Calculer le nombre de lignes nécessaires
+                    nb_films = len(films_a_afficher)
+                    nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
+
+                    # Afficher les films par ligne de 3
+                    for ligne in range(nb_lignes):
+                        cols = st.columns(3)
+                        for col in range(3):
+                            idx = ligne * 3 + col
+                            if idx < nb_films:
+                                film = films_a_afficher[idx]
+                                with cols[col]:
+                                    if pd.notna(film['poster_path']):
+                                        st.image(f"https://image.tmdb.org/t/p/w500{film['poster_path']}", 
+                                            width=150, 
+                                            caption=film['title'])
+                                    else:
+                                        st.image(chemin_bd + "medias/affiche.jpeg", 
+                                            width=150, 
+                                            caption=film['title'])
+                                        
+                                    st.write(f"**{film['title']}**")
+                                    if film['imdb_id']:
+                                        st.write(f"[Lien IMDb](https://www.imdb.com/title/{film['imdb_id']}/)")
                 else:
-                    st.error("❌ Aucune recommandation trouvée par vote.")
+                    st.error(f"❌ Aucun film trouvé similaire en vote à **{selected_title}**.")
 
             # Recommandation par genre
             if genre_button:
                 st.write("### Recommandations par genre 🍿")
                 resultats = films_similaires2(selected_title, df_filtered, df_tmdb)
 
-                if isinstance(resultats, list):
-                    cols = st.columns(3)  # Trois colonnes pour l'affichage côte à côte
-                    for idx, res in enumerate(resultats):
-                        title = res.get('titre', 'Titre inconnu')
-                        poster_path = res.get('poster_path')
-                        imdb_id = res.get('imdb_id')
+                if not resultats.empty:
+                        
+                        # Créer une liste pour stocker les films à afficher
+                        films_a_afficher = []
+                        for _, row in resultats.iterrows():
+                            films_a_afficher.append({
+                                'title': row.get('title', 'Titre inconnu'),
+                                'poster_path': row.get('poster_path'),
+                                'imdb_id': row.get('imdb_id')
+                            })
 
-                        with cols[idx % 3]:
-                            if poster_path:
-                                st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
-                            if imdb_id:
-                                st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
+                        # Calculer le nombre de lignes nécessaires
+                        nb_films = len(films_a_afficher)
+                        nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
+
+                        # Afficher les films par ligne de 3
+                        for ligne in range(nb_lignes):
+                            cols = st.columns(3)
+                            for col in range(3):
+                                idx = ligne * 3 + col
+                                if idx < nb_films:
+                                    film = films_a_afficher[idx]
+                                    with cols[col]:
+                                        if pd.notna(film['poster_path']):
+                                            st.image(f"https://image.tmdb.org/t/p/w500{film['poster_path']}", 
+                                                width=150, 
+                                                caption=film['title'])
+                                        else:
+                                            st.image(chemin_bd + "medias/affiche.jpeg", 
+                                                width=150, 
+                                                caption=film['title'])
+                                        
+                                        st.write(f"**{film['title']}**")
+                                        if film['imdb_id']:
+                                            st.write(f"[Lien IMDb](https://www.imdb.com/title/{film['imdb_id']}/)")
                 else:
-                    st.error("❌ Aucune recommandation trouvée par vote.")
+                        st.error(f"❌ Aucun film trouvé similaire en genre à **{selected_title}**.")
 
             # Recommandation par acteur
             if actor_button:
