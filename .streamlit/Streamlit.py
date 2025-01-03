@@ -19,6 +19,7 @@ import plotly.graph_objects as go
 import base64
 import re
 
+
 # Charger les données
 chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
