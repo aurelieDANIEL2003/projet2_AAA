@@ -71,7 +71,7 @@ elif selection == "Recommandation par film":
 
         # Ajouter les colonnes poster_path et imdb_id à partir de df_tmdb en fusionnant sur le titre
         results = results.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
-        results = results.drop_duplicates(subset='title', keep='first')
+        results = results.drop_duplicates(subset='title', keep='first')# garde que la èere ligne
         return results
         
     if film_nom:
@@ -106,7 +106,7 @@ elif selection == "Recommandation par film":
                             st.warning("🔗 Lien IMDb non disponible pour ce film.")
 
                         if poster_path:
-                            st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption="Affiche du film")
+                            st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150)  ####caption="Affiche du film
                         else:
                             st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption="Affiche non disponible")
                     else:
@@ -138,6 +138,8 @@ elif selection == "Recommandation par film":
                         with cols[idx % 3]:
                             if poster_path:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
+                            else:
+                               st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption="Affiche non disponible")
                             if imdb_id:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
                             else:
@@ -153,13 +155,15 @@ elif selection == "Recommandation par film":
                 if isinstance(resultats, list):
                     cols = st.columns(3)  # Trois colonnes pour l'affichage côte à côte
                     for idx, res in enumerate(resultats):
-                        title = res.get('titre', 'Titre inconnu')
+                        title = res.get('title', 'Titre inconnu')
                         poster_path = res.get('poster_path')
                         imdb_id = res.get('imdb_id')
 
                         with cols[idx % 3]:
                             if poster_path:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
+                            else:
+                               st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption="Affiche non disponible")
                             if imdb_id:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
                 else:
