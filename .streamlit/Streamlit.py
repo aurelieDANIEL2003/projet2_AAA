@@ -389,8 +389,8 @@ elif selection == "KPI":
 
       #faire une liste de la colonne péridoe
       liste_periode = df_final_KPI['période'].tolist()
-
-      st.write('Top 5 des acteurs')      
+      st.subheader("Top 5 des acteurs")
+           
       #faire une barre de sélection de la période 
       annees = st.selectbox("Choisissez la période", liste_periode)
       
@@ -403,26 +403,30 @@ elif selection == "KPI":
       plot1 = px.bar(data_frame = df_top5_graph, x='count', y='primaryName', labels=dico_labels, orientation = 'h', barmode = 'overlay', hover_name='primaryTitle', color_discrete_sequence =['#1b8585']*len(df_top5_graph))
       st.plotly_chart(plot1)    # graph en utilisant le df de la période selectionnée
       
-
-
       #GRAPH 2
-      plot2 = go.Figure()
-      plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_films'],name='films', legendgroup = 'films', marker_color='#61D2C7'))
-      plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
-      plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_series'], name='séries', legendgroup = 'séries', marker_color='#cb96b7'))
-      plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
-      plot2.update_layout(title=dict(text="Nombre d'acteurs dans les films et séries"))   #titre
-      st.plotly_chart(plot2)
-
+      st.subheader("Age moyen des acteurs")
+      plot3 = px.line(data_frame = age_moyen1, x = 'période', y = 'age', range_y = [0,80], markers=True, color_discrete_sequence =['#1b8585']*len(df_top5_graph))
+      st.plotly_chart(plot3)
 
       #GRAPH 3
-      plot3 = px.line(data_frame = age_moyen1, x = 'période', y = 'age', range_y = [0,80], markers=True, color_discrete_sequence =['#1b8585']*len(df_top5_graph), title= 'Age moyen des acteurs')
-      st.plotly_chart(plot3)
-      
+      st.subheader("Comparaison du nombre d'acteurs dans les films et séries")
+      plot2 = go.Figure()
+      plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_films'],name='Acteurs Films', legendgroup = 'films', marker_color='#61D2C7'))
+      plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
+      plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_series'], name='Acteurs séries', legendgroup = 'séries', marker_color='#cb96b7'))
+      plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
+    # Mise en page du graphique
+      plot2.update_layout(
+            xaxis_title="Période",
+            yaxis_title="Nombre d'Acteurs",
+            barmode='group',
+            )
+      st.plotly_chart(plot2)
 
       #GFRAPH 4
       #Graphique : Comparaison des durées moyennes des films et séries
 
+      st.subheader("Comparaison des durées moyennes des films et séries")
       plot4 = go.Figure()
       plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_films'],name="Durée Moyenne Films",legendgroup = 'films', mode="lines+markers", marker_color='#61D2C7'))
       plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
@@ -430,7 +434,6 @@ elif selection == "KPI":
       plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
       # Mise en page du graphique
       plot4.update_layout(
-            title=dict(text="Comparaison des durées moyennes des films et séries"),
             xaxis_title="Période",
             yaxis_title="Durée Moyenne (min)",
             barmode='group',
@@ -440,13 +443,14 @@ elif selection == "KPI":
 
       
     #   #MEILLEURS FILMS
-      df_best_movies = df_best_movies.iloc[:,:4]
-      df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
+    #   df_best_movies = df_best_movies.iloc[:,:4]
+    #   df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
       
       
-      st.write('Les 3 meilleurs films et leurs caractéristiques')
-      st.image(chemin_bd + "medias/top3.png", width=500)        
-      st.table(df_best_movies)
+      st.subheader('Les 3 meilleurs films et leurs caractéristiques')
+      st.image(chemin_bd + "medias/top3.png", width=700)  
+      st.image(chemin_bd + "medias/tableau_podium.png", width=700)       
+      #st.table(df_best_movies)
       
     except FileNotFoundError:
         st.error("Le fichier 'df_final.csv' est introuvable.")
