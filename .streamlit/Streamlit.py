@@ -1,4 +1,6 @@
 #copie 02/01
+#streamlit/Streamlit.py 
+#streamlit run . streamlit/Streamlit.py
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
