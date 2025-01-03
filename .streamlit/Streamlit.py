@@ -19,7 +19,7 @@ import ast
 import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
-#import base64
+import base64
 import re
 
 # Charger les données
@@ -440,40 +440,13 @@ elif selection == "KPI":
       df_best_movies = df_best_movies.iloc[:,:4]
       df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
       
+      
       st.write('Les 3 meilleurs films et leurs caractéristiques')
+      st.image(chemin_bd + "medias/top3.png", width=500)        
       st.table(df_best_movies)
-
+      
     except FileNotFoundError:
         st.error("Le fichier 'df_final.csv' est introuvable.")
-
-
-#######################################
-# Graphique : Podium des 3 meilleurs films par période
-        df_final_KPI = df_final_KPI.assign(Top_3_films=df_final_KPI['Top 3 films'].str.split(','))
-        df_final_KPI = df_final_KPI.explode('Top_3_films')  # Une ligne par titre associé
-
-        # Menu déroulant pour sélectionner une période
-        periode = st.selectbox("Sélectionnez une période :",  df_final_KPI["Période"].unique())
-
-        # Filtrer les données en fonction de la période sélectionnée
-        filtered_data =  df_final_KPI[ df_final_KPI["Période"] == periode].sort_values(by="Score", ascending=False).head(3)
-
-        plot_top3_films = px.bar(
-            data_frame=df_final_KPI,
-            x="période",              # Classement des films par période
-            y="Top_3_films",            # Titres des films
-            color="Top_3_films",        # Couleur pour chaque film
-            animation_frame="période",  # Animation basée sur les périodes
-            hover_name="Top_3_films",   # Affichage du titre au survol
-            title="Podium des 3 meilleurs films par période",
-            labels={"Top_3_films": "Films", "période": "Période"}
-        )
-
-        plot_top3_films.update_layout(
-            xaxis_title="Période",
-            yaxis_title="Films",
-            showlegend=False
-        )
-        st.plotly_chart(plot_top3_films)
+        
 
 
