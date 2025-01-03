@@ -22,13 +22,19 @@ import re
 import pandas as pd
 import requests
 
+# Fonction pour télécharger un fichier depuis Google Drive
 def download_file(url, output_file):
-    response = requests.get(url)
-    if response.status_code == 200:
-        with open(output_file, "wb") as file:
-            file.write(response.content)
-        return True
-    else:
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            with open(output_file, "wb") as file:
+                file.write(response.content)
+            return True
+        else:
+            st.error(f"Erreur lors du téléchargement depuis {url} (code: {response.status_code})")
+            return False
+    except Exception as e:
+        st.error(f"Erreur lors de la connexion à {url}: {e}")
         return False
 
 # URLs des fichiers à télécharger
@@ -41,11 +47,13 @@ file_urls = {
 # Télécharger et charger les fichiers
 dataframes = {}
 for name, url in file_urls.items():
-    if download_file(url, f"{name}.csv"):
-        try:
-            dataframes[name] = pd.read_csv(f"{name}.csv")
-        except Exception as e:
-            st.error(f"Erreur lors de la lecture du fichier {name}: {e}")
+    output_file = f"{name}.csv"
+    if download_file(url, output_file):
+        #try:
+            dataframes[name] = pd.read_csv(output_file)
+            #st.success(f"Fichier {name} téléchargé et chargé avec succès.")
+        #except Exception as e:
+            #st.error(f"Erreur lors de la lecture du fichier {name}: {e}")
     else:
         st.error(f"Erreur lors du téléchargement du fichier {name}.")
 
@@ -54,13 +62,6 @@ df_tmdb = dataframes.get("df_tmdb2")
 df_filtered = dataframes.get("df_filtered")
 df_filtered_actor = dataframes.get("df_filtered_actor")
 
-# Vérification des fichiers chargés
-if not df_tmdb.empty and not df_filtered.empty:
-    # Normalisation des titres pour éviter les problèmes de correspondance
-    df_tmdb['title_normalized'] = df_tmdb['title'].str.lower().str.strip()
-    df_filtered['title_normalized'] = df_filtered['title'].str.lower().str.strip()
-else:
-    st.error("Certains fichiers nécessaires sont manquants ou vides.")
 
 # les images
 image_url = "https://drive.google.com/uc?id=1_CMnzTFdhjMzlcHUT7uhP5j-P2O2IfNu"
@@ -70,6 +71,7 @@ podium = "https://drive.google.com/uc?id=1Lq-zVIU7ZKKOzGruHWzHf0N6SHlqeTVR&expor
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
+df_tmdb.columns = df_tmdb.columns.str.strip()
 df_tmdb['title_normalized'] = df_tmdb['title'].str.lower().str.strip()
 df_filtered['title_normalized'] = df_filtered['title'].str.lower().str.strip()
 
