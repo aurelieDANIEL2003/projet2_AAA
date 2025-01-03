@@ -1,0 +1,20 @@
+import streamlit as st
+from streamlit_option_menu import option_menu
+import pandas as pd
+import random
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+from sklearn.neighbors import NearestNeighbors
+from sklearn.preprocessing import MinMaxScaler
+from utils1 import films_similaires
+from utils2 import films_similaires2
+from utils3 import films_par_acteur
+from utils4 import search_actor
+from utils5 import films_similaires3
+import ast 
+import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
+import base64
+import re
