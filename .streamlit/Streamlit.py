@@ -375,9 +375,9 @@ elif selection == "KPI":
     st.title("KPI")
     try:
       df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
-      df_top_5_actors_per_periods = pd.read_csv(chemin_bd + 'resultat/df_top_5_actors_per_periodsa.csv')
+      #df_top_5_actors_per_periods = pd.read_csv(chemin_bd + 'resultat/df_top_5_actors_per_periodsa.csv')
       df_top5_act_films = pd.read_csv(chemin_bd + 'resultat/df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
-      df_top5_mean = pd.read_csv(chemin_bd + 'resultat/df_top5_mean.csv') #graph de moyenne d'apparitions par période(vient de df_final_re)
+      #df_top5_mean = pd.read_csv(chemin_bd + 'resultat/df_top5_mean.csv') #graph de moyenne d'apparitions par période(vient de df_final_re)
       age_moyen1 = pd.read_csv(chemin_bd+"resultat/age_moyen.csv") #graph âge moyen par période
       df_best_movies = pd.read_csv(chemin_bd+"resultat/df_best_movies.csv")
       comparaison_FSduree =  pd.read_csv(chemin_bd + 'resultat/comparaison_FSa.csv')
