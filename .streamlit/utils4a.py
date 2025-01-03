@@ -1,4 +1,3 @@
-#copie 02/01
 import ast  # Pour convertir des chaînes en listes Python
 import pandas as pd
 
