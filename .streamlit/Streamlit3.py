@@ -21,7 +21,10 @@ import re
 
 
 # Charger les données
-df_tmdb = pd.read_csv("/Users/lou/Documents/GitHub/projet2_AAA/bd_ignore/resultat/df_tmdb.csv")  # Dataset des films
+#df_tmdb = pd.read_csv("/Users/lou/Documents/GitHub/projet2_AAA/bd_ignore/resultat/df_tmdb.csv")  # Dataset des films
+df_tmdb22 = pd.read_csv('/Users/lou/Documents/GitHub/projet2_AAAdf_tmdb21.csv')
+df_tmdb = df_tmdb22.copy()
+
 df_filtered = pd.read_csv("/Users/lou/Documents/GitHub/projet2_AAA/bd_ignore/resultat/df_filtered.csv")
 df_filtered_actor = pd.read_csv("/Users/lou/Documents/GitHub/projet2_AAA/bd_ignore/resultat/df_filtered2.csv")
 
