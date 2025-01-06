@@ -41,14 +41,22 @@ url_df_filtered2 = "https://drive.google.com/uc?id=1SUFDuf9ibJIkt3TdwVW54Yd-_89r
 gdown.download(url_df_filtered2, 'df_filtered2.csv', quiet=False)
 df_filtered_actor = pd.read_csv('df_filtered2.csv')
 
+
 # les images
 
+url_image = "https://drive.google.com/uc?id=1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN"
+gdown.download(url_image, 'logo_canape.jpeg', quiet=False)
+
+url_image_affiche = "https://drive.google.com/uc?id=1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0"
+gdown.download(url_image_affiche, 'affiche.jpeg', quiet=False)
+
+url_top3 = "https://drive.google.com/uc?id=1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0"
+gdown.download(url_top3, 'top3.png', quiet=False)
 
 
-image_url = "https://drive.google.com/file/d/1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN/view?usp=share_link"
-image_affiche = "https://drive.google.com/file/d/1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0/view?usp=share_link"
-top3 = "https://drive.google.com/file/d/1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0/view?usp=share_link"
-podium = "https://drive.google.com/file/d/1Lq-zVIU7ZKKOzGruHWzHf0N6SHlqeTVR/view?usp=share_link"
+url_podium = "https://drive.google.com/uc?id=1Lq-zVIU7ZKKOzGruHWzHf0N6SHlqeTVR"
+gdown.download(url_podium, 'tableau_podium.png', quiet=False)
+
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
@@ -70,7 +78,7 @@ with st.sidebar:
 # Page d'accueil
 if selection == "Accueil":
     st.title('Bienvenue au CINÉMA ! 🎥')
-    st.image(image_url, width=500)
+    st.image('logo_canape.jpeg', width=500)
     st.write("""
         Recommandations personnalisées de films Made by Aurélie, Anissa et Anaëlle. 🎬
     """)
@@ -130,7 +138,7 @@ elif selection == "Recommandation par film":
                         if poster_path:
                             st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150)
                         else:
-                            st.image(image_affiche, width=150, caption="Affiche non disponible")
+                            st.image("affiche.jpeg", width=150, caption="Affiche non disponible")
                     else:
                         st.error("Les colonnes `imdb_id` ou `poster_path` sont manquantes dans les données sélectionnées.")
 
@@ -161,7 +169,7 @@ elif selection == "Recommandation par film":
                             if poster_path:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                             else:
-                                st.image(image_affiche, width=150, caption="Affiche non disponible")
+                                st.image('affiche.jpeg', width=150, caption="Affiche non disponible")
                             if imdb_id:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
                             else:
@@ -185,7 +193,7 @@ elif selection == "Recommandation par film":
                             if poster_path2:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path2}", width=150, caption=title2)
                             else:
-                                st.image(image_affiche, width=150, caption="Affiche non disponible")
+                                st.image('affiche.jpeg', width=150, caption="Affiche non disponible")
                             if imdb_id2:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id2}/)")
                             else:
@@ -259,7 +267,7 @@ elif selection == "Recommandation par film":
                                             width=150, 
                                             caption=film['title'])
                                     else:
-                                        st.image(image_affiche, 
+                                        st.image('affiche.jpeg', 
                                             width=150, 
                                             caption=film['title'])
                                     
@@ -339,7 +347,7 @@ elif selection == "Recommandation par acteur":
                                        width=150, 
                                        caption=film['title'])
                             else:
-                                st.image(image_affiche, 
+                                st.image('affiche.jpeg', 
                                        width=150, 
                                        caption=film['title'])
                             
@@ -383,7 +391,7 @@ elif selection == "Surprise":
                     st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                 else:
                     # Afficher l'image locale de remplacement
-                    st.image(image_affiche, width=150, caption=title)
+                    st.image('affiche.jpeg', width=150, caption=title)
 
                 # Afficher le titre du film
                 st.write(f"**Titre :** {title}")
@@ -399,106 +407,104 @@ elif selection == "Surprise":
 
 elif selection == "KPI":
 
-        # Fonction pour télécharger un fichier depuis Google Drive
-    def download_file(url, output_file):
-        response = requests.get(url)
-        if response.status_code == 200:
-            with open(output_file, "wb") as file:
-                file.write(response.content)
-            return True
-        else:
-            return False
-
-
-    # URLs de téléchargement des fichiers
-    file_urls = {
-        "df_final": "https://drive.google.com/uc?id=1a-cbrolKGMHexMZqKd6kobgZjWNfkj6i&export=download",
-        "df_top5_act_films": "https://drive.google.com/uc?id=1-tv_a2353fJdpRryNK8q3jOn2kSQZaV2&export=download",
-        "age_moyen": "https://drive.google.com/uc?id=1zMfxR90FQhjm4wcSEUgXtDSkGV23uV6H&export=download",
-        "df_best_movies": "https://drive.google.com/uc?id=1XODwa3K0w1dgq4OKpOfCqPVRB51WhckT&export=download",
-        "comparaison_FSa": "https://drive.google.com/uc?id=1JG3RalvkQ3orU9zdBT0rI-YLf24rMSrM&export=download"
-    }
-
-    # Téléchargement et chargement des fichiers
-    dataframes = {}
-    for name, url in file_urls.items():
-        if download_file(url, f"{name}.csv"):
-            try:
-                dataframes[name] = pd.read_csv(f"{name}.csv")
-                st.success(f"Fichier '{name}' téléchargé et chargé avec succès.")
-            except Exception as e:
-                st.error(f"Erreur lors du chargement du fichier '{name}': {e}")
-        else:
-            st.error(f"Erreur lors du téléchargement du fichier '{name}'.")
-
-    # Vérification que tous les fichiers ont été chargés
-    if not all(name in dataframes for name in file_urls):
-        st.error("Certains fichiers requis n'ont pas pu être chargés.")
-        st.stop()
-
-
-        # Assignation des DataFrames
-    df_final_KPI = dataframes.get("df_final")
-    df_top5_act_films = dataframes.get("df_top5_act_films")
-    age_moyen = dataframes.get("age_moyen")
-    df_best_movies = dataframes.get("df_best_movies")
-    comparaison_FSduree = dataframes.get("comparaison_FSa")
-
-    # Titre de la page
+        # Titre de la page
     st.title("Tableau de bord des KPI")
+    
+    try:
 
-    # **Graphique 1 : Top 5 des acteurs**
-    st.subheader("Top 5 des acteurs")
-    if "période" in df_final_KPI.columns:
-        liste_periode = df_final_KPI['période'].unique().tolist()
+        # URLs de téléchargement des fichiers
+
+        url_df_final = "https://drive.google.com/uc?id=1a-cbrolKGMHexMZqKd6kobgZjWNfkj6i"
+        gdown.download(url_df_final, 'df_final.csv', quiet=False)
+        df_final_KPI = pd.read_csv('df_final.csv')
+
+        url_df_top5_act_films = "https://drive.google.com/uc?id=1-tv_a2353fJdpRryNK8q3jOn2kSQZaV2"
+        gdown.download(url_df_top5_act_films, 'df_top5_act_film.csv', quiet=False)
+        df_top5_act_films = pd.read_csv('df_top5_act_film.csv')
+
+        url_age_moyen = "https://drive.google.com/uc?id=1zMfxR90FQhjm4wcSEUgXtDSkGV23uV6H"
+        gdown.download(url_age_moyen, 'age_moyen.csv', quiet=False)
+        age_moyen1 = pd.read_csv('age_moyen.csv')   
+
+        url_df_best_movies = "https://drive.google.com/uc?id=1XODwa3K0w1dgq4OKpOfCqPVRB51WhckT"
+        gdown.download(url_df_best_movies, 'df_best_movies.csv', quiet=False)
+        df_best_movies = pd.read_csv('df_filtered2.csv')
+
+        url_comparaison_FSa = "https://drive.google.com/uc?id=1JG3RalvkQ3orU9zdBT0rI-YLf24rMSrM"
+        gdown.download(url_comparaison_FSa, 'comparaison_FSa.csv', quiet=False)
+        comparaison_FSduree = pd.read_csv('comparaison_FSa.csv')
+
+
+
+        #faire une liste de la colonne péridoe
+        liste_periode = df_final_KPI['période'].tolist()
+        st.subheader("Top 5 des acteurs")
+            
+        #faire une barre de sélection de la période 
         annees = st.selectbox("Choisissez la période", liste_periode)
+        
+        #faire un df en prenant que la période selectionnée
         df_top5_graph = df_top5_act_films[df_top5_act_films['periode'] == annees].sort_values(by='count', ascending=True)
-        plot1 = px.bar(
-            df_top5_graph, 
-            x="count", 
-            y="primaryName", 
-            orientation="h", 
-            labels={"count": "Nombre d'apparitions", "primaryName": "Acteurs"}
-        )
-        st.plotly_chart(plot1)
-    else:
-        st.error("La colonne 'période' est manquante dans df_final.")
 
-    # **Graphique 2 : Âge moyen**
-    st.subheader("Âge moyen des acteurs par période")
-    if not age_moyen.empty:
-        plot2 = px.line(
-            age_moyen, 
-            x="période", 
-            y="age", 
-            markers=True, 
-            labels={"période": "Période", "age": "Âge moyen"}
-        )
-        st.plotly_chart(plot2)
-    else:
-        st.error("Les données pour l'âge moyen sont manquantes.")
-
-    # **Graphique 3 : Comparaison des durées moyennes**
-    st.subheader("Comparaison des durées moyennes des films et séries")
-    if not comparaison_FSduree.empty:
-        plot3 = go.Figure()
-        plot3.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_films'],
-                                mode="lines+markers", name="Durée Moyenne Films", marker_color="#61D2C7"))
-        plot3.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_series'],
-                                mode="lines+markers", name="Durée Moyenne Séries", marker_color="#CB96B7"))
-        plot3.update_layout(
-            xaxis_title="Période",
-            yaxis_title="Durée Moyenne (min)",
-            barmode='group'
-        )
+        dico_labels = {'count':"Nombre d'apparitions",
+                        'primaryName':"Acteurs"}   # dico pour renommer les axes
+        
+        plot1 = px.bar(data_frame = df_top5_graph, x='count', y='primaryName', labels=dico_labels, orientation = 'h', barmode = 'overlay', hover_name='primaryTitle', color_discrete_sequence =['#1b8585']*len(df_top5_graph))
+        st.plotly_chart(plot1)    # graph en utilisant le df de la période selectionnée
+        
+        #GRAPH 2
+        st.subheader("Age moyen des acteurs")
+        plot3 = px.line(data_frame = age_moyen1, x = 'période', y = 'age', range_y = [0,80], markers=True, color_discrete_sequence =['#1b8585']*len(df_top5_graph))
         st.plotly_chart(plot3)
-    else:
-        st.error("Les données pour la comparaison des durées moyennes sont manquantes.")
 
-    # **Meilleurs films**
-    st.subheader('Les 3 meilleurs films et leurs caractéristiques')
-    st.image(top3, width=700)  
-    st.image(podium, width=700)  
+        #GRAPH 3
+        st.subheader("Comparaison du nombre d'acteurs dans les films et séries")
+        plot2 = go.Figure()
+        plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_films'],name='Acteurs Films', legendgroup = 'films', marker_color='#61D2C7'))
+        plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
+        plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_series'], name='Acteurs séries', legendgroup = 'séries', marker_color='#cb96b7'))
+        plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
+        # Mise en page du graphique
+        plot2.update_layout(
+                xaxis_title="Période",
+                yaxis_title="Nombre d'Acteurs",
+                barmode='group',
+                )
+        st.plotly_chart(plot2)
+
+        #GFRAPH 4
+        #Graphique : Comparaison des durées moyennes des films et séries
+
+        st.subheader("Comparaison des durées moyennes des films et séries")
+        plot4 = go.Figure()
+        plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_films'],name="Durée Moyenne Films",legendgroup = 'films', mode="lines+markers", marker_color='#61D2C7'))
+        plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
+        plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_series'], name="Durée Moyenne Séries", legendgroup = 'séries', marker_color='#cb96b7'))
+        plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
+        # Mise en page du graphique
+        plot4.update_layout(
+                xaxis_title="Période",
+                yaxis_title="Durée Moyenne (min)",
+                barmode='group',
+                yaxis_range=[0,100]
+            )
+        st.plotly_chart(plot4)
+
+        
+        #   #MEILLEURS FILMS
+        #   df_best_movies = df_best_movies.iloc[:,:4]
+        #   df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
+        
+        
+        st.subheader('Les 3 meilleurs films et leurs caractéristiques')
+        st.image("top3.png", width=700)  
+        st.image("tableau_podium.png", width=700)       
+        #st.table(df_best_movies)
+        
+    except FileNotFoundError:
+            st.error("Le fichier 'df_final.csv' est introuvable.")
+
+
 
 
 
