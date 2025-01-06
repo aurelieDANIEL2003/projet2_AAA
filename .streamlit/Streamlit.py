@@ -46,7 +46,7 @@ with st.sidebar:
 # Page d'accueil
 if selection == "Accueil":
     st.title('Bienvenue au CINÉMA ! 🎥')
-    st.image(chemin_bd + "medias/logo_canape.jpeg", width=500)
+    st.image(chemin_bd + "medias/logo_canape.jpeg", width=700)
     st.write("""
         Recommandations personnalisées de films Made by Aurélie, Anissa et Anaëlle. 🎬
     """)
@@ -69,7 +69,7 @@ elif selection == "Recommandation par film":
 
         # Ajouter les colonnes poster_path et imdb_id à partir de df_tmdb en fusionnant sur le titre
         results = results.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
-        results = results.drop_duplicates(subset='title', keep='first')
+        results = results.drop_duplicates(subset='imdb_id', keep='first')
         return results
         
     if film_nom:
@@ -284,7 +284,7 @@ elif selection == "Recommandation par acteur":
         # Joindre les colonnes de df_tmdb pour inclure poster_path
         resultats_acteur = resultats_acteur.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
         # Supprimer les doublons
-        resultats_acteur = resultats_acteur.drop_duplicates(subset='title', keep='first')
+        resultats_acteur = resultats_acteur.drop_duplicates(subset='imdb_id', keep='first')
 
         if not resultats_acteur.empty:
             st.write(f"🎭 Films avec l'acteur **{acteur_nom}** :")
@@ -340,7 +340,7 @@ elif selection == "Surprise":
     # Joindre les colonnes de df_tmdb pour inclure poster_path
     resultats = resultats.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
     # Supprimer les doublons
-    resultats = resultats.drop_duplicates(subset='title', keep='first')
+    resultats = resultats.drop_duplicates(subset='imdb_id', keep='first')
 
     if not resultats.empty:
         cols = st.columns(3)  # Crée des colonnes pour afficher les films
@@ -361,8 +361,6 @@ elif selection == "Surprise":
                     # Afficher l'image locale de remplacement
                     st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption=title)
 
-                # Afficher le titre du film
-                st.write(f"**Titre :** {title}")
 
                 # Lien vers IMDb_x
                 if imdb_id and str(imdb_id).strip():

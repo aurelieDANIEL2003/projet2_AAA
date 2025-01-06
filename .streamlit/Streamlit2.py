@@ -62,16 +62,6 @@ df_tmdb = dataframes.get("df_tmdb2")
 df_filtered = dataframes.get("df_filtered")
 df_filtered_actor = dataframes.get("df_filtered2")
 
-chemin_bd = r"./bd_ignore/"
-df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv',
-    sep=',',               # Remplacez par le bon séparateur
-    encoding='utf-8',      # Spécifiez l'encodage
-    on_bad_lines="skip",   # Ignorez les lignes mal formées
-    engine='python'        # Utilisez le moteur Python pour plus de flexibilité
-)
-
-
-
 
 # les images
 image_url = "https://drive.google.com/file/d/1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN/view?usp=share_link"
