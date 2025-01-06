@@ -21,49 +21,30 @@ import re
 
 import pandas as pd
 import requests
+import gdown
 
-# Fonction pour télécharger un fichier depuis Google Drive
-def download_file(url, output_file):
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            with open(output_file, "wb") as file:
-                file.write(response.content)
-            return True
-        else:
-            st.error(f"Erreur lors du téléchargement depuis {url} (code: {response.status_code})")
-            return False
-    except Exception as e:
-        st.error(f"Erreur lors de la connexion à {url}: {e}")
-        return False
+
 
 # URLs des fichiers à télécharger
-file_urls = {
-    "df_tmdb2": "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM&export=download",
-    "df_filtered": "https://drive.google.com/file/d/1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk/view?usp=share_link",
-    "df_filtered2": "https://drive.google.com/file/d/1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN/view?usp=share_link"
-}
 
-# Télécharger et charger les fichiers
-dataframes = {}
-for name, url in file_urls.items():
-    output_file = f"{name}.csv"
-    if download_file(url, output_file):
-        #try:
-            dataframes[name] = pd.read_csv(output_file)
-            #st.success(f"Fichier {name} téléchargé et chargé avec succès.")
-        #except Exception as e:
-            #st.error(f"Erreur lors de la lecture du fichier {name}: {e}")
-    else:
-        st.error(f"Erreur lors du téléchargement du fichier {name}.")
+url_df_tmdb2 = "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM"
+gdown.download(url_df_tmdb2, 'df_tmdb2.csv', quiet=False)
+df_tmdb = pd.read_csv('df_tmdb2.csv')
 
-# Assignation des DataFrames
-df_tmdb = dataframes.get("df_tmdb2")
-df_filtered = dataframes.get("df_filtered")
-df_filtered_actor = dataframes.get("df_filtered2")
 
+url_df_filtered = "https://drive.google.com/uc?id=1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk"
+gdown.download(url_df_filtered, 'df_filtered.csv', quiet=False)
+df_filtered = pd.read_csv('df_filtered.csv')
+
+
+url_df_filtered2 = "https://drive.google.com/uc?id=1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN"
+gdown.download(url_df_filtered2, 'df_filtered2.csv', quiet=False)
+df_filtered_actor = pd.read_csv('df_filtered2.csv')
 
 # les images
+
+
+
 image_url = "https://drive.google.com/file/d/1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN/view?usp=share_link"
 image_affiche = "https://drive.google.com/file/d/1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0/view?usp=share_link"
 top3 = "https://drive.google.com/file/d/1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0/view?usp=share_link"
@@ -71,7 +52,6 @@ podium = "https://drive.google.com/file/d/1Lq-zVIU7ZKKOzGruHWzHf0N6SHlqeTVR/view
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
-df_tmdb.columns = df_tmdb.columns.str.strip()
 df_tmdb['title_normalized'] = df_tmdb['title'].str.lower().str.strip()
 df_filtered['title_normalized'] = df_filtered['title'].str.lower().str.strip()
 

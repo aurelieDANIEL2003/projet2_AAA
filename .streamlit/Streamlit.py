@@ -69,7 +69,8 @@ elif selection == "Recommandation par film":
 
         # Ajouter les colonnes poster_path et imdb_id à partir de df_tmdb en fusionnant sur le titre
         results = results.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
-        results = results.drop_duplicates(subset='imdb_id', keep='first')
+        results = results.drop_duplicates(subset='imdb_id_x', keep='first')
+        results = results.drop_duplicates(subset='imdb_id_y', keep='first')
         return results
         
     if film_nom:
@@ -340,7 +341,8 @@ elif selection == "Surprise":
     # Joindre les colonnes de df_tmdb pour inclure poster_path
     resultats = resultats.merge(df_tmdb[['title', 'poster_path', 'imdb_id']], on='title', how='left')
     # Supprimer les doublons
-    resultats = resultats.drop_duplicates(subset='imdb_id', keep='first')
+    resultats = resultats.drop_duplicates(subset='imdb_id_x', keep='first')
+    resultats = resultats.drop_duplicates(subset='imdb_id_y', keep='first')
 
     if not resultats.empty:
         cols = st.columns(3)  # Crée des colonnes pour afficher les films
