@@ -25,7 +25,7 @@ df_tmdb = pd.read_csv('df_tmdb2.csv')  # Dataset des films
 df_filtered = pd.read_csv('df_filtered_newactor.csv')
 df_filtered_actor = pd.read_csv('df_filtered_new.csv')
 
-#
+
 
 # Normaliser les titres pour éviter les problèmes de correspondance
 df_tmdb['title_normalized'] = df_tmdb['title'].str.lower().str.strip()
@@ -219,6 +219,7 @@ elif selection == "Recommandation par film":
                         })
 
                     # Calculer le nombre de lignes nécessaires
+                    films_a_afficher = films_a_afficher[:10]
                     nb_films = len(films_a_afficher)
                     nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
 
@@ -375,13 +376,13 @@ elif selection == "KPI":
 
     st.title("KPI")
     try:
-      df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
+      df_final_KPI = pd.read_csv("df_final.csv")
       #df_top_5_actors_per_periods = pd.read_csv(chemin_bd + 'resultat/df_top_5_actors_per_periodsa.csv')
-      df_top5_act_films = pd.read_csv(chemin_bd + 'resultat/df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
+      df_top5_act_films = pd.read_csv('df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
       #df_top5_mean = pd.read_csv(chemin_bd + 'resultat/df_top5_mean.csv') #graph de moyenne d'apparitions par période(vient de df_final_re)
-      age_moyen1 = pd.read_csv(chemin_bd+"resultat/age_moyen.csv") #graph âge moyen par période
-      df_best_movies = pd.read_csv(chemin_bd+"resultat/df_best_movies.csv")
-      comparaison_FSduree =  pd.read_csv(chemin_bd + 'resultat/comparaison_FSa.csv')
+      age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
+      df_best_movies = pd.read_csv("df_best_movies.csv")
+      comparaison_FSduree =  pd.read_csv('comparaison_FSa.csv')
 
 
       #faire une liste de la colonne péridoe
