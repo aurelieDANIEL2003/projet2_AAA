@@ -380,7 +380,7 @@ elif selection == "Surprise":
 
 elif selection == "KPI":
 
-    st.title("KPI")
+    st.title("Tableau de bord des KPI")
     try:
       df_final_KPI = pd.read_csv("df_final.csv")
       df_top5_act_films = pd.read_csv('df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
