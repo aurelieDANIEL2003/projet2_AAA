@@ -21,9 +21,9 @@ import re
 
 # Charger les données
 chemin_bd = r"./bd_ignore/"
-df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
-df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered_newactor.csv')
-df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered_new.csv')
+df_tmdb = pd.read_csv('df_tmdb2.csv')  # Dataset des films
+df_filtered = pd.read_csv('df_filtered_newactor.csv')
+df_filtered_actor = pd.read_csv('df_filtered_new.csv')
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
