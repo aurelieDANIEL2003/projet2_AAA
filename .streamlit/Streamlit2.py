@@ -25,6 +25,7 @@ df_tmdb = pd.read_csv('df_tmdb2.csv')  # Dataset des films
 df_filtered = pd.read_csv('df_filtered_newactor.csv')
 df_filtered_actor = pd.read_csv('df_filtered_new.csv')
 
+#
 
 # Normaliser les titres pour éviter les problèmes de correspondance
 df_tmdb['title_normalized'] = df_tmdb['title'].str.lower().str.strip()
