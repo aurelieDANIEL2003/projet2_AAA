@@ -184,6 +184,7 @@ elif selection == "Recommandation par film":
                 selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace('[', '').replace(']',''))
                 selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace("'", '').replace("'",''))
                 acteurs= selected_movie['two_actors']
+                #regex = re.search(r"\s(.*?)\sName", acteurs)
                 st.write(f"### Recommandations par acteur ⭐:\n {acteurs[0]}")
                
 

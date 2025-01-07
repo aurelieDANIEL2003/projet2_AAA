@@ -17,10 +17,7 @@ def films_similaires(film_nom, df, df_tmdb):
     try:
         # Préparer les caractéristiques pour le modèle Nearest Neighbors
         features = ['popularity', 'vote_average', 'vote_count', 'budget', 'revenue', 'runtime']
-        df_encoded = pd.concat(
-            [df[features], pd.get_dummies(df['genres'], prefix='genre')],
-            axis=1
-        )
+        df_encoded = df[features]
         scaler = MinMaxScaler()
         X = scaler.fit_transform(df_encoded)
 
