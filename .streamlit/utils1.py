@@ -9,14 +9,14 @@ import re
 import gdown
 
 
-url_df_tmdb2 = "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM"
-gdown.download(url_df_tmdb2, 'df_tmdb2.csv', quiet=False)
-df_tmdb = pd.read_csv('df_tmdb2.csv')
+# url_df_tmdb2 = "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM"
+# gdown.download(url_df_tmdb2, 'df_tmdb2.csv', quiet=False)
+# df_tmdb = pd.read_csv('df_tmdb2.csv')
 
 
-url_df_filtered = "https://drive.google.com/uc?id=1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk"
-gdown.download(url_df_filtered, 'df_filtered.csv', quiet=False)
-df_filtered = pd.read_csv('df_filtered.csv')
+# url_df_filtered = "https://drive.google.com/uc?id=1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk"
+# gdown.download(url_df_filtered, 'df_filtered.csv', quiet=False)
+# df_filtered = pd.read_csv('df_filtered.csv')
 
 # chemin_bd = r"./bd_ignore/"
 # df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
@@ -51,7 +51,7 @@ def films_similaires(film_nom, df, df_tmdb):
         # Retourner les résultats avec lien
         resultats = []
         for i, idx in enumerate(indices[0][1:], start=1):  # Exclure le film d'origine
-            film_title = df_filtered.iloc[idx]['title']
+            film_title = df.iloc[idx]['title']
             #distance = distances[0][i]
             
             # Récupérer le lien depuis df_tmdb
