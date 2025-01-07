@@ -381,11 +381,11 @@ elif selection == "KPI":
     st.title("Tableau de bord des KPI")
     
     try:
-        df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
-        df_top5_act_films = pd.read_csv(chemin_bd + 'resultat/df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
-        age_moyen1 = pd.read_csv(chemin_bd+"resultat/age_moyen.csv") #graph âge moyen par période
-        df_best_movies = pd.read_csv(chemin_bd+"resultat/df_best_movies.csv")
-        comparaison_FSduree =  pd.read_csv(chemin_bd + 'resultat/comparaison_FSa.csv')
+        df_final_KPI = pd.read_csv("df_final.csv")
+        df_top5_act_films = pd.read_csv('df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
+        age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
+        df_best_movies = pd.read_csv("df_best_movies.csv")
+        comparaison_FSduree =  pd.read_csv('comparaison_FSa.csv')
 
 
         #faire une liste de la colonne péridoe
