@@ -19,16 +19,12 @@ import plotly.graph_objects as go
 import base64
 import re
 
-import pandas as pd
-import requests
-import gdown
-
-
 # Charger les données
-
+#chemin_bd = r"./bd_ignore/"
 df_tmdb = pd.read_csv('df_tmdb2.csv')  # Dataset des films
 df_filtered = pd.read_csv('df_filtered_newactor.csv')
 df_filtered_actor = pd.read_csv('df_filtered_new.csv')
+
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
@@ -50,7 +46,7 @@ with st.sidebar:
 # Page d'accueil
 if selection == "Accueil":
     st.title('Bienvenue au CINÉMA ! 🎥')
-    st.image('medias/logo_canape.jpeg', width=500)
+    st.image("medias/logo_canape.jpeg", width=1000)
     st.write("""
         Recommandations personnalisées de films Made by Aurélie, Anissa et Anaëlle. 🎬
     """)
@@ -98,6 +94,7 @@ elif selection == "Recommandation par film":
                     if 'imdb_id_x' in selected_movie.columns and 'poster_path' in selected_movie.columns:
                         imdb_id_x = selected_movie['imdb_id_x'].iloc[0].strip() if not pd.isna(selected_movie['imdb_id_x'].iloc[0]) else None
                         poster_path = selected_movie['poster_path'].iloc[0] if not pd.isna(selected_movie['poster_path'].iloc[0]) else None
+                        vote = selected_movie['vote_average'].iloc[0] if not pd.isna(selected_movie['vote_average'].iloc[0]) else None
 
                         # Afficher les informations du film sélectionné
                         st.write(f"### Film sélectionné : **{selected_title}**")
@@ -110,7 +107,7 @@ elif selection == "Recommandation par film":
                         if poster_path:
                             st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150)
                         else:
-                            st.image("medias/affiche.jpeg", width=150, caption="Affiche non disponible")
+                            st.image("affiche.jpeg", width=150, caption="Affiche non disponible")
                     else:
                         st.error("Les colonnes `imdb_id` ou `poster_path` sont manquantes dans les données sélectionnées.")
 
@@ -136,16 +133,22 @@ elif selection == "Recommandation par film":
                         title = res.get('title', 'Titre inconnu')
                         poster_path = res.get('poster_path')
                         imdb_id = res.get('imdb_id')
+                        vote = res.get('vote')
 
                         with cols[idx % 3]:
                             if poster_path:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                             else:
-                                st.image('medias/affiche.jpeg', width=150, caption="Affiche non disponible")
+                                st.image("affiche.jpeg", width=150, caption="Affiche non disponible")
                             if imdb_id:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
                             else:
                                 st.warning(f"IMDb ID manquant pour le film {title}")
+                            # if vote:
+                            #     st.write(f"[Lien du film](https://www.imdb.com/title/{vote}/)")
+                            # else:
+                            #     st.warning(f"Vote manquant pour le film {title}")
+                            
                 else:
                     st.error("❌ Aucune recommandation trouvée par vote.")
 
@@ -165,7 +168,7 @@ elif selection == "Recommandation par film":
                             if poster_path2:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path2}", width=150, caption=title2)
                             else:
-                                st.image('medias/affiche.jpeg', width=150, caption="Affiche non disponible")
+                                st.image("affiche.jpeg", width=150, caption="Affiche non disponible")
                             if imdb_id2:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id2}/)")
                             else:
@@ -187,7 +190,8 @@ elif selection == "Recommandation par film":
                 list_actor_unique = sorted(list(actor_unique))  # Liste triée des acteurs uniques
                 selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace('[', '').replace(']',''))
                 selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace("'", '').replace("'",''))
-                acteurs=selected_movie['two_actors']
+                acteurs= selected_movie['two_actors']
+                #regex = re.search(r"\s(.*?)\sName", acteurs)
                 st.write(f"### Recommandations par acteur ⭐:\n {acteurs[0]}")
                
 
@@ -240,10 +244,9 @@ elif selection == "Recommandation par film":
                                             width=150, 
                                             caption=film['title'])
                                     else:
-                                        st.image('medias/affiche.jpeg', 
+                                        st.image("affiche.jpeg", 
                                             width=150, 
                                             caption=film['title'])
-                                    
                                     if film['imdb_id']:
                                         st.write(f"[Lien IMDb](https://www.imdb.com/title/{film['imdb_id']}/)")
                 else:
@@ -321,10 +324,9 @@ elif selection == "Recommandation par acteur":
                                        width=150, 
                                        caption=film['title'])
                             else:
-                                st.image('medias/affiche.jpeg', 
+                                st.image("affiche.jpeg", 
                                        width=150, 
                                        caption=film['title'])
-                            
                             if film['imdb_id']:
                                 st.write(f"[Lien IMDb](https://www.imdb.com/title/{film['imdb_id']}/)")
         else:
@@ -332,15 +334,15 @@ elif selection == "Recommandation par acteur":
 
 
 
-### recommandation 6 films au hasard
+### recommandation 3 films au hasard
 
 elif selection == "Surprise":
     st.title("Recommandation Surprise")
 
     def film_hasard(df_filtered, df_tmdb):
-        return df_filtered.sample(6)  # Sélection de 6 films aléatoires
+        return df_filtered.sample(3)  # Sélection de 3 films aléatoires
 
-    # Sélection de 6 films aléatoires
+    # Sélection de 3 films aléatoires
     resultats = film_hasard(df_filtered, df_tmdb)
 
     # Joindre les colonnes de df_tmdb pour inclure poster_path
@@ -365,7 +367,7 @@ elif selection == "Surprise":
                     st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                 else:
                     # Afficher l'image locale de remplacement
-                    st.image('medias/affiche.jpeg', width=150, caption=title)
+                    st.image("affiche.jpeg", width=150, caption=title)
 
                 # Lien vers IMDb_x
                 if imdb_id and str(imdb_id).strip():
@@ -378,86 +380,79 @@ elif selection == "Surprise":
 
 elif selection == "KPI":
 
-        # Titre de la page
-    st.title("Tableau de bord des KPI")
-    
+    st.title("KPI")
     try:
-        df_final_KPI = pd.read_csv('df_final_KPI2.csv')
-        df_top5_act_films = pd.read_csv('df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
-        age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
-        df_best_movies = pd.read_csv("df_best_movies.csv")
-        comparaison_FSduree =  pd.read_csv('comparaison_FSa.csv')
+      df_final_KPI = pd.read_csv("df_final.csv")
+      df_top5_act_films = pd.read_csv('df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
+      age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
+      comparaison_FSduree =  pd.read_csv('comparaison_FSa.csv')
 
 
-        #faire une liste de la colonne péridoe
-        liste_periode = df_final_KPI['période'].tolist()
-        st.subheader("Top 5 des acteurs")
-            
-        #faire une barre de sélection de la période 
-        annees = st.selectbox("Choisissez la période", liste_periode)
-        
-        #faire un df en prenant que la période selectionnée
-        df_top5_graph = df_top5_act_films[df_top5_act_films['periode'] == annees].sort_values(by='count', ascending=True)
+      #faire une liste de la colonne péridoe
+      liste_periode = df_final_KPI['période'].tolist()
 
-        dico_labels = {'count':"Nombre d'apparitions",
-                        'primaryName':"Acteurs"}   # dico pour renommer les axes
-        
-        plot1 = px.bar(data_frame = df_top5_graph, x='count', y='primaryName', labels=dico_labels, orientation = 'h', barmode = 'overlay', hover_name='primaryTitle', color_discrete_sequence =['#1b8585']*len(df_top5_graph))
-        st.plotly_chart(plot1)    # graph en utilisant le df de la période selectionnée
-        
-        #GRAPH 2
-        st.subheader("Age moyen des acteurs")
-        plot3 = px.line(data_frame = age_moyen1, x = 'période', y = 'age', range_y = [0,80], markers=True, color_discrete_sequence =['#1b8585']*len(df_top5_graph))
-        st.plotly_chart(plot3)
+      st.subheader('Top 5 des acteurs')      
+      #faire une barre de sélection de la période 
+      annees = st.selectbox("Choisissez la période", liste_periode)
+      
+      #faire un df en prenant que la période selectionnée
+      df_top5_graph = df_top5_act_films[df_top5_act_films['periode'] == annees].sort_values(by='count', ascending=True)
 
-        #GRAPH 3
-        st.subheader("Comparaison du nombre d'acteurs dans les films et séries")
-        plot2 = go.Figure()
-        plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_films'],name='Acteurs Films', legendgroup = 'films', marker_color='#61D2C7'))
-        plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
-        plot2.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_series'], name='Acteurs séries', legendgroup = 'séries', marker_color='#cb96b7'))
-        plot2.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
-        # Mise en page du graphique
-        plot2.update_layout(
-                xaxis_title="Période",
-                yaxis_title="Nombre d'Acteurs",
-                barmode='group',
-                )
-        st.plotly_chart(plot2)
+      dico_labels = {'count':"Nombre d'apparitions",
+                     'primaryName':"Acteurs"}   # dico pour renommer les axes
+      
+      plot1 = px.bar(data_frame = df_top5_graph, x='count', y='primaryName', labels=dico_labels, orientation = 'h', barmode = 'overlay', hover_name='primaryTitle', color_discrete_sequence =['#1b8585']*len(df_top5_graph))
+      st.plotly_chart(plot1)    # graph en utilisant le df de la période selectionnée
+      
+      #GRAPH 2
+      st.subheader('Age moyen des acteurs')
+      plot2 = px.line(data_frame = age_moyen1, x = 'période', y = 'age', range_y = [0,80], markers=True, color_discrete_sequence =['#1b8585']*len(df_top5_graph))
+      st.plotly_chart(plot2)
 
-        #GFRAPH 4
-        #Graphique : Comparaison des durées moyennes des films et séries
+      #GRAPH 3
+      st.subheader("Comparaison du nombre d'acteurs dans les films et séries")
+      plot3 = go.Figure()
+      plot3.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_films'],legendgroup='films', name = 'Acteurs films', marker_color='#61D2C7'))
+      plot3.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_films'], legendgroup='films', name= 'Films', marker_color='#196b6b'))
+      plot3.add_trace(go.Scatter(x=df_final_KPI['période'], y=df_final_KPI['acteurs_series'], legendgroup='séries', name = 'Acteurs séries', marker_color='#cb96b7'))
+      plot3.add_trace(go.Bar(x=df_final_KPI['période'],y=df_final_KPI['acteurs_series'], legendgroup='séries', name = 'Séries', marker_color='#613650'))
+      plot3.update_layout(
+            xaxis_title="Période",
+            yaxis_title="Nombre d'acteurs",
+            barmode='group'
+        )
+      st.plotly_chart(plot3)
+      
 
-        st.subheader("Comparaison des durées moyennes des films et séries")
-        plot4 = go.Figure()
-        plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_films'],name="Durée Moyenne Films",legendgroup = 'films', mode="lines+markers", marker_color='#61D2C7'))
-        plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_films'], name='films', legendgroup = 'films', marker_color='#196b6b'))
-        plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_series'], name="Durée Moyenne Séries", legendgroup = 'séries', marker_color='#cb96b7'))
-        plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_series'], name='séries', legendgroup = 'séries', marker_color='#613650'))
-        # Mise en page du graphique
-        plot4.update_layout(
-                xaxis_title="Période",
-                yaxis_title="Durée Moyenne (min)",
-                barmode='group',
-                yaxis_range=[0,100]
-            )
-        st.plotly_chart(plot4)
+      #GFRAPH 4
+      #Graphique : Comparaison des durées moyennes des films et séries
+      st.subheader('Comparaison des durées moyennes des films et séries')
+      plot4 = go.Figure()
+      plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_films'],name="Durée Moyenne Films",legendgroup = 'films', mode="lines+markers", marker_color='#61D2C7'))
+      plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_films'], name='films', legendgroup = 'Films', marker_color='#196b6b'))
+      plot4.add_trace(go.Scatter(x=comparaison_FSduree['période'], y=comparaison_FSduree['durée_moyenne_series'], name="Durée Moyenne Séries", legendgroup = 'séries', marker_color='#cb96b7'))
+      plot4.add_trace(go.Bar(x=comparaison_FSduree['période'],y=comparaison_FSduree['durée_moyenne_series'], name='séries', legendgroup = 'Séries', marker_color='#613650'))
+      # Mise en page du graphique
+      plot4.update_layout(
+            xaxis_title="Période",
+            yaxis_title="Durée Moyenne (min)",
+            barmode='group',
+            yaxis_range=[0,100]
+        )
+      st.plotly_chart(plot4)
 
-        
-        #   #MEILLEURS FILMS
-        #   df_best_movies = df_best_movies.iloc[:,:4]
-        #   df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
-        
-        
-        st.subheader('Les 3 meilleurs films et leurs caractéristiques')
-        st.image("medias/top3.png", width=700)  
-        st.image("medias/tableau_podium.png", width=700)       
-        #st.table(df_best_movies)
-        
+
+    # #   #MEILLEURS FILMS
+    #   df_best_movies = df_best_movies.iloc[:,:4]
+    #   df_best_movies = df_best_movies.style.format({"year": lambda x : '{:.0f}'.format(x)}) #permet de supprimer la virgule qui se met par défaut dans la colonne année
+      
+      
+      st.subheader('Les 3 meilleurs films et leurs caractéristiques')
+      st.image("top3.png", width=700)
+      st.image("tableau_podium.png", width=700)          
+    # st.table(df_best_movies)
+      
     except FileNotFoundError:
-            st.error("Le fichier 'df_final.csv' est introuvable.")
-
-
-
+        st.error("Le fichier 'df_final.csv' est introuvable.")
 
 
