@@ -376,9 +376,6 @@ elif selection == "Surprise":
                     # Afficher l'image locale de remplacement
                     st.image('medias/affiche.jpeg', width=150, caption=title)
 
-                # Afficher le titre du film
-                st.write(f"**Titre :** {title}")
-
                 # Lien vers IMDb_x
                 if imdb_id and str(imdb_id).strip():
                     st.write(f"[Lien IMDb](https://www.imdb.com/title/{imdb_id}/)")

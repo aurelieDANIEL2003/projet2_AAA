@@ -36,7 +36,7 @@ def films_similaires(film_nom, df, df_tmdb):
         X = scaler.fit_transform(df_encoded)
 
         # Initialiser le modèle Nearest Neighbors
-        model = NearestNeighbors(n_neighbors=6, metric='euclidean')
+        model = NearestNeighbors(n_neighbors=10, metric='euclidean')
         model.fit(X)
 
         # Rechercher l'index du film donné

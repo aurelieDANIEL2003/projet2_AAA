@@ -71,7 +71,7 @@ def films_similaires2(film_nom, df, df_tmdb):
         X = scaler.fit_transform(df_genreF[features])
 
         # Étape 6 : Initialiser KNN et trouver les films similaires
-        model = NearestNeighbors(n_neighbors=6, metric='euclidean')
+        model = NearestNeighbors(n_neighbors=10, metric='euclidean')
         model.fit(X)
 
         # Rechercher l'index du film donné
