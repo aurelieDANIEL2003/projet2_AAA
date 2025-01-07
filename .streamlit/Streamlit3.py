@@ -223,7 +223,7 @@ elif selection == "Recommandation par film":
                         })
 
                     # Calculer le nombre de lignes nécessaires
-                    films_a_afficher = films_a_afficher[:10]
+                    films_a_afficher = films_a_afficher[:9]
                     nb_films = len(films_a_afficher)
                     nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
 
@@ -304,6 +304,7 @@ elif selection == "Recommandation par acteur":
                 })
 
             # Calculer le nombre de lignes nécessaires
+            films_a_afficher = films_a_afficher[:9]
             nb_films = len(films_a_afficher)
             nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
 
@@ -331,15 +332,15 @@ elif selection == "Recommandation par acteur":
 
 
 
-### recommandation 3 films au hasard
+### recommandation 6 films au hasard
 
 elif selection == "Surprise":
     st.title("Recommandation Surprise")
 
     def film_hasard(df_filtered, df_tmdb):
-        return df_filtered.sample(3)  # Sélection de 3 films aléatoires
+        return df_filtered.sample(6)  # Sélection de 6 films aléatoires
 
-    # Sélection de 3 films aléatoires
+    # Sélection de 6 films aléatoires
     resultats = film_hasard(df_filtered, df_tmdb)
 
     # Joindre les colonnes de df_tmdb pour inclure poster_path
