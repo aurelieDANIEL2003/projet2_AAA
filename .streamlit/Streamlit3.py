@@ -24,22 +24,11 @@ import requests
 import gdown
 
 
-# URLs des fichiers à télécharger
+# Charger les données
 
-url_df_tmdb2 = "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM"
-gdown.download(url_df_tmdb2, 'df_tmdb2.csv', quiet=False)
-df_tmdb = pd.read_csv('df_tmdb2.csv')
-
-
-url_df_filtered_newactor = "https://drive.google.com/uc?id=16x-igP6S6UF4kZUS1nisiaVP-cL8tzhy" 
-gdown.download(url_df_filtered_newactor, 'df_filtered_newactor.csv', quiet=False)
+df_tmdb = pd.read_csv('df_tmdb2.csv')  # Dataset des films
 df_filtered = pd.read_csv('df_filtered_newactor.csv')
-
-
-url_df_filtered_new= "https://drive.google.com/uc?id=1y0UF_lz1KbdldpWXnhtxAhVLfo_ICH_b" 
-gdown.download(url_df_filtered_new, 'df_filtered_new.csv', quiet=False)
 df_filtered_actor = pd.read_csv('df_filtered_new.csv')
-
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
@@ -234,6 +223,7 @@ elif selection == "Recommandation par film":
                         })
 
                     # Calculer le nombre de lignes nécessaires
+                    films_a_afficher = films_a_afficher[:10]
                     nb_films = len(films_a_afficher)
                     nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
 
@@ -391,29 +381,11 @@ elif selection == "KPI":
     st.title("Tableau de bord des KPI")
     
     try:
-
-        # URLs de téléchargement des fichiers
-
-        url_df_final = "https://drive.google.com/uc?id=1a-cbrolKGMHexMZqKd6kobgZjWNfkj6i"
-        gdown.download(url_df_final, 'df_final.csv', quiet=False)
-        df_final_KPI = pd.read_csv('df_final.csv')
-
-        url_df_top5_act_films = "https://drive.google.com/uc?id=1-tv_a2353fJdpRryNK8q3jOn2kSQZaV2"
-        gdown.download(url_df_top5_act_films, 'df_top5_act_film.csv', quiet=False)
-        df_top5_act_films = pd.read_csv('df_top5_act_film.csv')
-
-        url_age_moyen = "https://drive.google.com/uc?id=1zMfxR90FQhjm4wcSEUgXtDSkGV23uV6H"
-        gdown.download(url_age_moyen, 'age_moyen.csv', quiet=False)
-        age_moyen1 = pd.read_csv('age_moyen.csv')   
-
-        url_df_best_movies = "https://drive.google.com/uc?id=1XODwa3K0w1dgq4OKpOfCqPVRB51WhckT"
-        gdown.download(url_df_best_movies, 'df_best_movies.csv', quiet=False)
-        df_best_movies = pd.read_csv('df_filtered2.csv')
-
-        url_comparaison_FSa = "https://drive.google.com/uc?id=1JG3RalvkQ3orU9zdBT0rI-YLf24rMSrM"
-        gdown.download(url_comparaison_FSa, 'comparaison_FSa.csv', quiet=False)
-        comparaison_FSduree = pd.read_csv('comparaison_FSa.csv')
-
+        df_final_KPI = pd.read_csv(chemin_bd+"resultat/df_final.csv")
+        df_top5_act_films = pd.read_csv(chemin_bd + 'resultat/df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
+        age_moyen1 = pd.read_csv(chemin_bd+"resultat/age_moyen.csv") #graph âge moyen par période
+        df_best_movies = pd.read_csv(chemin_bd+"resultat/df_best_movies.csv")
+        comparaison_FSduree =  pd.read_csv(chemin_bd + 'resultat/comparaison_FSa.csv')
 
 
         #faire une liste de la colonne péridoe
