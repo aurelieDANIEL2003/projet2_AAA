@@ -31,19 +31,14 @@ gdown.download(url_df_tmdb2, 'df_tmdb2.csv', quiet=False)
 df_tmdb = pd.read_csv('df_tmdb2.csv')
 
 
-url_df_filtered = "https://drive.google.com/uc?id=1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk"
-gdown.download(url_df_filtered, 'df_filtered.csv', quiet=False)
-df_filtered = pd.read_csv('df_filtered.csv')
+url_df_filtered_newactor = "https://drive.google.com/uc?id=16x-igP6S6UF4kZUS1nisiaVP-cL8tzhy" 
+gdown.download(url_df_filtered_newactor, 'df_filtered_newactor.csv', quiet=False)
+df_filtered = pd.read_csv('df_filtered_newactor.csv')
 
 
-url_df_filtered2 = "https://drive.google.com/uc?id=1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN"
-gdown.download(url_df_filtered2, 'df_filtered2.csv', quiet=False)
-df_filtered_actor = pd.read_csv('df_filtered2.csv')
-
-
-# les images
-
-
+url_df_filtered_new= "https://drive.google.com/uc?id=1y0UF_lz1KbdldpWXnhtxAhVLfo_ICH_b" 
+gdown.download(url_df_filtered_new, 'df_filtered_new.csv', quiet=False)
+df_filtered_actor = pd.read_csv('df_filtered_new.csv')
 
 
 
