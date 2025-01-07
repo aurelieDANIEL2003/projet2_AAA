@@ -82,11 +82,13 @@ def films_similaires2(film_nom, df, df_tmdb):
             # Récupérer les données additionnelles depuis df_tmdb
             lien_poster = df_tmdb[df_tmdb['title'] == film_title]['poster_path'].values
             imdb_id = df_tmdb[df_tmdb['title'] == film_title]['imdb_id'].values
+            vote = df_tmdb[df_tmdb['title'] == film_title]['vote_average'].values
 
             resultats.append({
                 "title": film_title,
                 "poster_path": lien_poster[0] if len(lien_poster) > 0 else None,
-                "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None
+                "imdb_id": imdb_id[0] if len(imdb_id) > 0 else None,
+                "vote_average": vote[0] if len(vote) > 0 else None
             })
 
         return resultats

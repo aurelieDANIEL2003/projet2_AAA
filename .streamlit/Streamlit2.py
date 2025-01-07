@@ -94,6 +94,7 @@ elif selection == "Recommandation par film":
                     if 'imdb_id_x' in selected_movie.columns and 'poster_path' in selected_movie.columns:
                         imdb_id_x = selected_movie['imdb_id_x'].iloc[0].strip() if not pd.isna(selected_movie['imdb_id_x'].iloc[0]) else None
                         poster_path = selected_movie['poster_path'].iloc[0] if not pd.isna(selected_movie['poster_path'].iloc[0]) else None
+                        vote = selected_movie['vote_average'].iloc[0] if not pd.isna(selected_movie['vote_average'].iloc[0]) else None
 
                         # Afficher les informations du film sélectionné
                         st.write(f"### Film sélectionné : **{selected_title}**")
@@ -132,6 +133,7 @@ elif selection == "Recommandation par film":
                         title = res.get('title', 'Titre inconnu')
                         poster_path = res.get('poster_path')
                         imdb_id = res.get('imdb_id')
+                        vote = res.get('vote')
 
                         with cols[idx % 3]:
                             if poster_path:
@@ -142,6 +144,11 @@ elif selection == "Recommandation par film":
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
                             else:
                                 st.warning(f"IMDb ID manquant pour le film {title}")
+                            # if vote:
+                            #     st.write(f"[Lien du film](https://www.imdb.com/title/{vote}/)")
+                            # else:
+                            #     st.warning(f"Vote manquant pour le film {title}")
+                            
                 else:
                     st.error("❌ Aucune recommandation trouvée par vote.")
 
@@ -300,6 +307,7 @@ elif selection == "Recommandation par acteur":
                 })
 
             # Calculer le nombre de lignes nécessaires
+            films_a_afficher = films_a_afficher[:9]
             nb_films = len(films_a_afficher)
             nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
 
@@ -375,11 +383,8 @@ elif selection == "KPI":
     st.title("KPI")
     try:
       df_final_KPI = pd.read_csv("df_final.csv")
-      #df_top_5_actors_per_periods = pd.read_csv(chemin_bd + 'resultat/df_top_5_actors_per_periodsa.csv')
       df_top5_act_films = pd.read_csv('df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
-      #df_top5_mean = pd.read_csv(chemin_bd + 'resultat/df_top5_mean.csv') #graph de moyenne d'apparitions par période(vient de df_final_re)
       age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
-      #df_best_movies = pd.read_csv("df_best_movies.csv")
       comparaison_FSduree =  pd.read_csv('comparaison_FSa.csv')
 
 
