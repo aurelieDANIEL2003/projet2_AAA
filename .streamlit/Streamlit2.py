@@ -43,18 +43,7 @@ df_filtered_actor = pd.read_csv('df_filtered2.csv')
 
 # les images
 
-url_image = "https://drive.google.com/uc?id=1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN"
-gdown.download(url_image, 'logo_canape.jpeg', quiet=False)
 
-url_image_affiche = "https://drive.google.com/uc?id=1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0"
-gdown.download(url_image_affiche, 'affiche.jpeg', quiet=False)
-
-url_top3 = "https://drive.google.com/uc?id=1RKHLneSZN__XAJ-QfZw7nqZUQUsVCIb0"
-gdown.download(url_top3, 'top3.png', quiet=False)
-
-
-url_podium = "https://drive.google.com/uc?id=1Lq-zVIU7ZKKOzGruHWzHf0N6SHlqeTVR"
-gdown.download(url_podium, 'tableau_podium.png', quiet=False)
 
 
 
@@ -77,7 +66,7 @@ with st.sidebar:
 # Page d'accueil
 if selection == "Accueil":
     st.title('Bienvenue au CINÉMA ! 🎥')
-    st.image('logo_canape.jpeg', width=500)
+    st.image('medias/logo_canape.jpeg', width=500)
     st.write("""
         Recommandations personnalisées de films Made by Aurélie, Anissa et Anaëlle. 🎬
     """)
@@ -137,7 +126,7 @@ elif selection == "Recommandation par film":
                         if poster_path:
                             st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150)
                         else:
-                            st.image("affiche.jpeg", width=150, caption="Affiche non disponible")
+                            st.image("medias/affiche.jpeg", width=150, caption="Affiche non disponible")
                     else:
                         st.error("Les colonnes `imdb_id` ou `poster_path` sont manquantes dans les données sélectionnées.")
 
@@ -168,7 +157,7 @@ elif selection == "Recommandation par film":
                             if poster_path:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                             else:
-                                st.image('affiche.jpeg', width=150, caption="Affiche non disponible")
+                                st.image('medias/affiche.jpeg', width=150, caption="Affiche non disponible")
                             if imdb_id:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id}/)")
                             else:
@@ -192,7 +181,7 @@ elif selection == "Recommandation par film":
                             if poster_path2:
                                 st.image(f"https://image.tmdb.org/t/p/w500{poster_path2}", width=150, caption=title2)
                             else:
-                                st.image('affiche.jpeg', width=150, caption="Affiche non disponible")
+                                st.image('medias/affiche.jpeg', width=150, caption="Affiche non disponible")
                             if imdb_id2:
                                 st.write(f"[Lien du film](https://www.imdb.com/title/{imdb_id2}/)")
                             else:
@@ -266,7 +255,7 @@ elif selection == "Recommandation par film":
                                             width=150, 
                                             caption=film['title'])
                                     else:
-                                        st.image('affiche.jpeg', 
+                                        st.image('medias/affiche.jpeg', 
                                             width=150, 
                                             caption=film['title'])
                                     
@@ -346,7 +335,7 @@ elif selection == "Recommandation par acteur":
                                        width=150, 
                                        caption=film['title'])
                             else:
-                                st.image('affiche.jpeg', 
+                                st.image('medias/affiche.jpeg', 
                                        width=150, 
                                        caption=film['title'])
                             
@@ -390,7 +379,7 @@ elif selection == "Surprise":
                     st.image(f"https://image.tmdb.org/t/p/w500{poster_path}", width=150, caption=title)
                 else:
                     # Afficher l'image locale de remplacement
-                    st.image('affiche.jpeg', width=150, caption=title)
+                    st.image('medias/affiche.jpeg', width=150, caption=title)
 
                 # Afficher le titre du film
                 st.write(f"**Titre :** {title}")
@@ -496,8 +485,8 @@ elif selection == "KPI":
         
         
         st.subheader('Les 3 meilleurs films et leurs caractéristiques')
-        st.image("top3.png", width=700)  
-        st.image("tableau_podium.png", width=700)       
+        st.image("medias/top3.png", width=700)  
+        st.image("medias/tableau_podium.png", width=700)       
         #st.table(df_best_movies)
         
     except FileNotFoundError:
