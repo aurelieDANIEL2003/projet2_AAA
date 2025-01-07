@@ -219,7 +219,7 @@ elif selection == "Recommandation par film":
                         })
 
                     # Calculer le nombre de lignes nécessaires
-                    films_a_afficher = films_a_afficher[:10]
+                    films_a_afficher = films_a_afficher[:9]
                     nb_films = len(films_a_afficher)
                     nb_lignes = (nb_films + 2) // 3  # Arrondi supérieur
 
@@ -360,9 +360,6 @@ elif selection == "Surprise":
                     # Afficher l'image locale de remplacement
                     st.image(chemin_bd + "medias/affiche.jpeg", width=150, caption=title)
 
-                # Afficher le titre du film
-                st.write(f"**Titre :** {title}")
-
                 # Lien vers IMDb_x
                 if imdb_id and str(imdb_id).strip():
                     st.write(f"[Lien IMDb](https://www.imdb.com/title/{imdb_id}/)")
@@ -381,7 +378,7 @@ elif selection == "KPI":
       df_top5_act_films = pd.read_csv('df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
       #df_top5_mean = pd.read_csv(chemin_bd + 'resultat/df_top5_mean.csv') #graph de moyenne d'apparitions par période(vient de df_final_re)
       age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
-      df_best_movies = pd.read_csv("df_best_movies.csv")
+      #df_best_movies = pd.read_csv("df_best_movies.csv")
       comparaison_FSduree =  pd.read_csv('comparaison_FSa.csv')
 
 
