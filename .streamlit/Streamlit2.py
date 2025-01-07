@@ -196,9 +196,9 @@ elif selection == "Recommandation par film":
                 for actor in list_actor:
                     actor_unique.update(actor)
                 list_actor_unique = sorted(list(actor_unique))  # Liste triée des acteurs uniques
-                selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace('{', '').replace('}',''))
+                selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace('[', '').replace(']',''))
                 selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace("'", '').replace("'",''))
-                acteurs=list(selected_movie['two_actors'])
+                acteurs=selected_movie['two_actors']
                 st.write(f"### Recommandations par acteur ⭐:\n {acteurs[0]}")
                
 
