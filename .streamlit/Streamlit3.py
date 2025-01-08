@@ -22,9 +22,9 @@ import requests
 
 # Charger les données
 
-df_tmdb = pd.read_csv('df_tmdb2.csv')  # Dataset des films
-df_filtered = pd.read_csv('df_filtered_newactor.csv')
-df_filtered_actor = pd.read_csv('df_filtered_new.csv')
+df_tmdb = pd.read_csv('csv/df_tmdb2.csv')  # Dataset des films
+df_filtered = pd.read_csv('csv/df_filtered_newactor.csv')
+df_filtered_actor = pd.read_csv('csv/df_filtered_new.csv')
 
 
 # Normaliser les titres pour éviter les problèmes de correspondance
@@ -369,7 +369,6 @@ elif selection == "Surprise":
                     st.write(f"[Lien IMDb](https://www.imdb.com/title/{imdb_id}/)")
 
 
-    print('oo')
 
 # Page KPI
 
@@ -379,11 +378,11 @@ elif selection == "KPI":
     st.title("Tableau de bord des KPI")
     
     #try:
-    df_final_KPI = pd.read_csv('df_final_KPI2.csv')
-    df_top5_act_films = pd.read_csv('df_top5_act_film.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
-    age_moyen1 = pd.read_csv("age_moyen.csv") #graph âge moyen par période
+    df_final_KPI = pd.read_csv('csv/df_final_KPI2.csv')
+    df_top5_act_films = pd.read_csv('csv/df_top5_act_films.csv')  #graph de top5 acteurs avec leurs projets les plus connus (vient de df_final_re)
+    age_moyen1 = pd.read_csv("csv/age_moyen.csv") #graph âge moyen par période
     #df_best_movies = pd.read_csv("df_best_movies.csv")
-    comparaison_FSduree =  pd.read_csv('comparaison_FSa.csv')
+    comparaison_FSduree =  pd.read_csv('csv/comparaison_FSa.csv')
 
 
     #faire une liste de la colonne péridoe
