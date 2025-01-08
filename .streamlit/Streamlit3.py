@@ -184,8 +184,9 @@ elif selection == "Recommandation par film":
                 selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace('[', '').replace(']',''))
                 selected_movie['two_actors']=selected_movie['two_actors'].apply(lambda x : str(x).replace("'", '').replace("'",''))
                 acteurs=selected_movie['two_actors']
+                acteurs = acteurs.reset_index(drop=True)  # Réinitialise l'index
                 st.write(f"### Recommandations par acteur ⭐:\n {acteurs[0]}")
-               
+              
 
                 # Appel de la fonction films_similaires3
                 resultats = films_similaires3(selected_title, df_filtered, df_tmdb, list_actor_unique)
