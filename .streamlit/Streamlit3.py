@@ -447,8 +447,8 @@ elif selection == "KPI":
     
     
     st.subheader('Les 3 meilleurs films et leurs caractéristiques')
-    st.image("top3.png", width=700)  
-    st.image("tableau_podium.png", width=700)       
+    st.image("medias/top3.png", width=700)  
+    st.image("medias/tableau_podium.png", width=700)       
         #st.table(df_best_movies)
         
     # except FileNotFoundError:
