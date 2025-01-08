@@ -8,33 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 import streamlit as st
 import pandas as pd
 import re
-import gdown
 
-# url_df_tmdb2 = "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM"
-# gdown.download(url_df_tmdb2, 'df_tmdb2.csv', quiet=False)
-# df_tmdb = pd.read_csv('df_tmdb2.csv')
-
-# url_df_filtered = "https://drive.google.com/uc?id=1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk"
-# gdown.download(url_df_filtered, 'df_filtered.csv', quiet=False)
-# df_filtered = pd.read_csv('df_filtered.csv')
-
-
-# chemin_bd = r"./bd_ignore/"
-# df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films
-# df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
-# df_filtered = df_filtered.reset_index(drop=True)
-
-########## par acteur
-import pandas as pd
-
-# # Génération de la liste des acteurs uniques
-# list_actor = df_filtered['two_actors'].apply(
-#     lambda x: [actor.strip() for actor in x.split(',')] if pd.notna(x) else []
-# )
-# actor_unique = set()
-# for actor in list_actor:
-#     actor_unique.update(actor)
-# list_actor_unique = list(actor_unique)
 
 def films_par_acteur(acteur_nom, df, df_tmdb):
     """

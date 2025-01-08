@@ -1,7 +1,7 @@
 import ast  # Pour convertir des chaînes en listes Python
 import pandas as pd
 
-print('AAA')
+
 
 def search_actor(actor_nom, df, df_tmdb):
 

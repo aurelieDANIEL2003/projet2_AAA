@@ -7,28 +7,8 @@ import streamlit as st
 import pandas as pd
 from utils3 import films_par_acteur
 import ast
-import gdown
 import re
 
-# url_df_tmdb2 = "https://drive.google.com/uc?id=1QF-nUGIoyo8eEecSOV2iDmMzfmU2X_eM"
-# gdown.download(url_df_tmdb2, 'df_tmdb2.csv', quiet=False)
-# df_tmdb = pd.read_csv('df_tmdb2.csv')
-
-
-# url_df_filtered = "https://drive.google.com/uc?id=1qMIPty8HywHHLC2aW8dWYAMxiNIxCrWk"
-# gdown.download(url_df_filtered, 'df_filtered.csv', quiet=False)
-# df_filtered = pd.read_csv('df_filtered.csv')
-
-
-# url_df_filtered2 = "https://drive.google.com/uc?id=1SUFDuf9ibJIkt3TdwVW54Yd-_89rHKzN"
-# gdown.download(url_df_filtered2, 'df_filtered2.csv', quiet=False)
-# df_filtered_actor = pd.read_csv('df_filtered2.csv')
-
-# chemin_bd = r"./bd_ignore/"
-# df_tmdb = pd.read_csv(chemin_bd + 'resultat/df_tmdb2.csv')  # Dataset des films 
-# df_filtered = pd.read_csv(chemin_bd + 'resultat/df_filtered.csv')
-# df_filtered = df_filtered.reset_index(drop=True)
-# df_filtered_actor = pd.read_csv(chemin_bd + 'resultat/df_filtered2.csv')
     
 ########## par acteur  
 def films_similaires3(film_nom, df, df_tmdb, list_actor_unique):
