@@ -369,7 +369,7 @@ elif selection == "Surprise":
                     st.write(f"[Lien IMDb](https://www.imdb.com/title/{imdb_id}/)")
 
 
-
+    print('oo')
 
 # Page KPI
 
