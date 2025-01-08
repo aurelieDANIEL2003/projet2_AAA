@@ -22,8 +22,6 @@ import re
 import pandas as pd
 import requests
 
-
-
 # Charger les données
 
 df_tmdb = pd.read_csv('df_tmdb2.csv')  # Dataset des films
